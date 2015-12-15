@@ -1,5 +1,5 @@
 [package]
-name = "torrent_search"
+name = "torrent-search"
 version = "0.1.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 [dependencies]

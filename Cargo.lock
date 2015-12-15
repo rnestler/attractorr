@@ -1,5 +1,5 @@
 [root]
-name = "torrent_search"
+name = "torrent-search"
 version = "0.1.0"
 dependencies = [
  "hyper 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
