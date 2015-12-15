@@ -1,0 +1,7 @@
+[package]
+name = "torrent_search"
+version = "0.1.0"
+authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
+[dependencies]
+select = "^0.2"
+hyper = "^0.7"
