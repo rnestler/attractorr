@@ -61,7 +61,7 @@ fn main() {
     let entries = parse_piratebay(&document);
 
     for entry in entries.iter() {
-        println!("{:?}", entry);
+        println!("{:#?}", entry);
     }
 }
 
