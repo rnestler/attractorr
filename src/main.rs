@@ -1,5 +1,6 @@
 extern crate hyper;
 extern crate select;
+extern crate docopt;
 
 use select::document::Document;
 use select::node::Node;
@@ -61,8 +62,14 @@ fn search_piratebay(term: &str) -> Vec<Torrent> {
     parse_piratebay(&document)
 }
 
+static USAGE: &'static str = "
+Usage: torrent-search <searchterm>
+";
+
 fn main() {
-    let entries = search_piratebay("debian");
+    let args = docopt::Docopt::new(USAGE).and_then(|d| d.parse())
+        .unwrap_or_else(|e| e.exit());
+    let entries = search_piratebay(args.get_str("<searchterm>"));
     for entry in entries.iter() {
         println!("{:#?}", entry);
     }
