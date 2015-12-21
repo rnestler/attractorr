@@ -19,6 +19,14 @@ struct Torrent {
     pub leachers: Option<u32>,
 }
 
+struct PirateBaySearch {
+    connection: hyper::Client
+}
+
+trait SearchProvider {
+    fn search(&self, term: &str) -> Vec<Torrent>;
+}
+
 fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
     let name = try!(row.find(Class("detLink")).first()
                     .ok_or("Could not find 'detLink'".to_owned())
@@ -48,18 +56,24 @@ fn parse_piratebay(document: &Document) -> Vec<Torrent> {
     result
 }
 
-fn search_piratebay(term: &str) -> Vec<Torrent> {
-    let client = Client::new();
+impl SearchProvider for PirateBaySearch {
+    fn search(&self, term: &str) -> Vec<Torrent> {
+        let mut res = self.connection.get(&format!("https://thepiratebay.mn/search/{}/0/99/0", term))
+            .header(Connection::close())
+            .send().unwrap();
 
-    let mut res = client.get(&format!("https://thepiratebay.mn/search/{}/0/99/0", term))
-        .header(Connection::close())
-        .send().unwrap();
+        let mut body = String::new();
+        res.read_to_string(&mut body).unwrap();
 
-    let mut body = String::new();
-    res.read_to_string(&mut body).unwrap();
+        let document = Document::from_str(&body);
+        parse_piratebay(&document)
+    }
+}
 
-    let document = Document::from_str(&body);
-    parse_piratebay(&document)
+impl PirateBaySearch {
+    fn new() -> PirateBaySearch {
+        PirateBaySearch{connection: Client::new()}
+    }
 }
 
 static USAGE: &'static str = "
@@ -69,7 +83,10 @@ Usage: torrent-search <searchterm>
 fn main() {
     let args = docopt::Docopt::new(USAGE).and_then(|d| d.parse())
         .unwrap_or_else(|e| e.exit());
-    let entries = search_piratebay(args.get_str("<searchterm>"));
+
+    let piratebay_search = PirateBaySearch::new();
+    let entries = piratebay_search.search(args.get_str("<searchterm>"));
+
     for entry in entries.iter() {
         println!("{:#?}", entry);
     }
