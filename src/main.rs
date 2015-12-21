@@ -84,11 +84,20 @@ fn main() {
     let args = docopt::Docopt::new(USAGE).and_then(|d| d.parse())
         .unwrap_or_else(|e| e.exit());
 
-    let piratebay_search = PirateBaySearch::new();
-    let entries = piratebay_search.search(args.get_str("<searchterm>"));
+    // create all search providers
+    let mut providers = vec![];
+    providers.push(PirateBaySearch::new());
 
-    for entry in entries.iter() {
-        println!("{:#?}", entry);
+    // search for torrents
+    let keyword = args.get_str("<searchterm>");
+    let mut torrents = vec![];
+    for provider in providers.iter() {
+        torrents.push(provider.search(keyword));
+    }
+
+    // print out all torrents
+    for torrent in torrents.iter() {
+        println!("{:#?}", torrent);
     }
 }
 
