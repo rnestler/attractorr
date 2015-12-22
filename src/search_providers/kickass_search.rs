@@ -2,8 +2,7 @@ extern crate hyper;
 extern crate select;
 extern crate flate2;
 
-//use std::io::prelude::*;
-//use flate2::read::GzDecoder;
+use self::flate2::read::GzDecoder;
 
 use select::document::Document;
 use select::node::Node;
@@ -30,12 +29,12 @@ impl KickassSearch {
 
 impl SearchProvider for KickassSearch {
     fn search(&self, term: &str) -> Vec<Torrent> {
-        let mut res = self.connection.get(&format!("https://kat.cr/usearch/{}", term))
+        let res = self.connection.get(&format!("https://kat.cr/usearch/{}", term))
             .header(Connection::close())
             .send().unwrap();
 
         let mut body = String::new();
-        let mut d = flate2::read::GzDecoder::new(res).unwrap();
+        let mut d = GzDecoder::new(res).unwrap();
         d.read_to_string(&mut body).unwrap();
 
         let document = Document::from_str(&body);

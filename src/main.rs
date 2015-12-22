@@ -19,9 +19,10 @@ fn main() {
         .unwrap_or_else(|e| e.exit());
 
     // create all search providers
-    let mut providers = vec![];
-    providers.push(PirateBaySearch::new());
-    //providers.push(KickassSearch::new());
+    let providers: Vec<Box<SearchProvider>> = vec![
+        Box::new(PirateBaySearch::new()),
+        Box::new(KickassSearch::new()),
+    ];
 
     // search for torrents
     let keyword = args.get_str("<searchterm>");
