@@ -31,11 +31,16 @@ $ cargo build
 To install openssl on Windows see [here](https://github.com/sfackler/rust-openssl#windows)
 
 ## Usage
+There are two interfaces:
+ * torrent-search-cli
+ * torrent-search-gtk
 
-Just execute
+When using cargo one has to use the `--bin` option to select the binary to run:
 
 ```
-$ cargo run -- "search term"
+# search for "search term" in all supported sources.
+$ cargo run --bin torrent-search-cli $searchterm
+# start the GTK GUI
+$ cargo run --bin torrent-search-gtk
 ```
 
-To search for "search term" in all supported sources.
