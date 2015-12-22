@@ -42,7 +42,6 @@ fn main() {
     for torrent in torrents.iter() {
         let title_and_url = gtk::LinkButton::new_with_label(&torrent.magnet_link, &torrent.name).unwrap();
         title_and_url.set_halign(gtk::Align::Start);
-        title_and_url.set_margin_start(0);
         container.add(&title_and_url);
     }
     scrolled_window.add(&container);
