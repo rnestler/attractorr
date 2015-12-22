@@ -7,6 +7,7 @@ mod torrent;
 mod search_providers;
 use search_providers::SearchProvider;
 use search_providers::pirate_bay_search::PirateBaySearch;
+use search_providers::kickass_search::KickassSearch;
 
 
 static USAGE: &'static str = "
@@ -20,6 +21,7 @@ fn main() {
     // create all search providers
     let mut providers = vec![];
     providers.push(PirateBaySearch::new());
+    //providers.push(KickassSearch::new());
 
     // search for torrents
     let keyword = args.get_str("<searchterm>");
