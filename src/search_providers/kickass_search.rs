@@ -70,3 +70,17 @@ fn parse_kickass(document: &Document) -> Vec<Torrent> {
     }
     result
 }
+
+#[cfg(test)]
+mod test {
+    use select::document::Document;
+    static TEST_DATA: &'static str = include_str!("test_data/kickass.html");
+
+    #[test]
+    fn test_parse_kickass() {
+        let document = Document::from_str(TEST_DATA);
+        let torrents = super::parse_kickass(&document);
+        assert_eq!(torrents.len(), 25);
+    }
+}
+
