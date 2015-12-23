@@ -66,3 +66,17 @@ fn parse_piratebay(document: &Document) -> Vec<Torrent> {
     }
     result
 }
+
+#[cfg(test)]
+mod test {
+    use select::document::Document;
+    static TEST_DATA: &'static str = include_str!("test_data/piratebay.html");
+
+    #[test]
+    fn test_parse_piratebay() {
+        let document = Document::from_str(TEST_DATA);
+        let torrents = super::parse_piratebay(&document);
+        assert_eq!(torrents.len(), 16);
+    }
+}
+
