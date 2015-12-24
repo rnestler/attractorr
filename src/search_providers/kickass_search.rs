@@ -54,15 +54,15 @@ fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
 
     let magnet_link = try!(link.attr("href").ok_or("Could not find href element".to_owned()));
 
-    // table data is |Name|Size|Files|Age|Seeders|Leachers
+    // table data is |Name|Size|Files|Age|Seeders|Leechers|
     let tds = row.find(Name("td"));
     let mut tds = tds.iter().skip(4);
     let seeders = tds.next()
         .and_then(|v| v.text().parse::<u32>().ok());
-    let leachers = tds.next()
+    let leechers = tds.next()
         .and_then(|v| v.text().parse::<u32>().ok());
 
-    Ok(Torrent{name: name, magnet_link: magnet_link.to_owned(), seeders: seeders, leachers: leachers})
+    Ok(Torrent{name: name, magnet_link: magnet_link.to_owned(), seeders: seeders, leechers: leechers})
 }
 
 fn parse_kickass(document: &Document) -> Vec<Torrent> {

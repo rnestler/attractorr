@@ -47,17 +47,17 @@ fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
     let link = try!(row.find(Attr("title", "Download this torrent using magnet")).first()
                     .ok_or("Could not find magnet link".to_owned())
                     );
-    // table data is |Type|Name|Seeders|Leachers
+    // table data is |Type|Name|Seeders|Leechers|
     let tds = row.find(Name("td"));
     let mut tds = tds.iter().skip(2);
     let seeders = tds.next()
         .and_then(|v| v.text().parse::<u32>().ok());
-    let leachers = tds.next()
+    let leechers = tds.next()
         .and_then(|v| v.text().parse::<u32>().ok());
 
     let magnet_link = try!(link.attr("href").ok_or("Could not find href element".to_owned()));
 
-    Ok(Torrent{name: name, magnet_link: magnet_link.to_owned(), seeders: seeders, leachers: leachers})
+    Ok(Torrent{name: name, magnet_link: magnet_link.to_owned(), seeders: seeders, leechers: leechers})
 }
 
 fn parse_piratebay(document: &Document) -> Vec<Torrent> {
