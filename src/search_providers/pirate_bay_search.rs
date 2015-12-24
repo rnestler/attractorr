@@ -84,6 +84,11 @@ mod test {
         let document = Document::from_str(TEST_DATA);
         let torrents = super::parse_piratebay(&document);
         assert_eq!(torrents.len(), 16);
+        for torrent in torrents.iter() {
+            assert!(torrent.magnet_link.starts_with("magnet:?"));
+            assert!(torrent.seeders.is_some());
+            assert!(torrent.leechers.is_some());
+        }
     }
 }
 
