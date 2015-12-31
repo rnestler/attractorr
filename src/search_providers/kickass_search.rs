@@ -54,7 +54,15 @@ fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
 
     let magnet_link = try!(link.attr("href").ok_or("Could not find href element".to_owned()));
 
-    Ok(Torrent{name: name, magnet_link: magnet_link.to_owned(), seeders: None, leachers: None})
+    // table data is |Name|Size|Files|Age|Seeders|Leechers|
+    let tds = row.find(Name("td"));
+    let mut tds = tds.iter().skip(4);
+    let seeders = tds.next()
+        .and_then(|v| v.text().parse::<u32>().ok());
+    let leechers = tds.next()
+        .and_then(|v| v.text().parse::<u32>().ok());
+
+    Ok(Torrent{name: name, magnet_link: magnet_link.to_owned(), seeders: seeders, leechers: leechers})
 }
 
 fn parse_kickass(document: &Document) -> Vec<Torrent> {
@@ -81,6 +89,11 @@ mod test {
         let document = Document::from_str(TEST_DATA);
         let torrents = super::parse_kickass(&document);
         assert_eq!(torrents.len(), 25);
+        for torrent in torrents.iter() {
+            assert!(torrent.magnet_link.starts_with("magnet:?"));
+            assert!(torrent.seeders.is_some());
+            assert!(torrent.leechers.is_some());
+        }
     }
 }
 
