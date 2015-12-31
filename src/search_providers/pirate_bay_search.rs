@@ -26,7 +26,7 @@ impl PirateBaySearch {
 
 impl SearchProvider for PirateBaySearch {
     fn search(&self, term: &str) -> Vec<Torrent> {
-        let mut res = self.connection.get(&format!("https://thepiratebay.mn/search/{}/0/99/0", term))
+        let mut res = self.connection.get(&format!("https://thepiratebay.to/search/{}/0/99/0", term))
             .header(Connection::close())
             .send().unwrap();
 
