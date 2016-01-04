@@ -5,6 +5,7 @@ use select::document::Document;
 use select::node::Node;
 use select::predicate::{Attr, Class, Name};
 
+use std::error::Error;
 use std::io::Read;
 
 use hyper::Client;
@@ -25,16 +26,16 @@ impl PirateBaySearch {
 }
 
 impl SearchProvider for PirateBaySearch {
-    fn search(&self, term: &str) -> Vec<Torrent> {
-        let mut res = self.connection.get(&format!("https://thepiratebay.to/search/{}/0/99/0", term))
+    fn search(&self, term: &str) -> Result<Vec<Torrent>,Box<Error>> {
+        let mut res = try!(self.connection.get(&format!("https://thepiratebay.to/search/{}/0/99/0", term))
             .header(Connection::close())
-            .send().unwrap();
+            .send());
 
         let mut body = String::new();
-        res.read_to_string(&mut body).unwrap();
+        try!(res.read_to_string(&mut body));
 
         let document = Document::from_str(&body);
-        parse_piratebay(&document)
+        Ok(parse_piratebay(&document))
     }
 }
 
