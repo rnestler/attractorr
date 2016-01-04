@@ -8,6 +8,7 @@ use select::document::Document;
 use select::node::Node;
 use select::predicate::{Attr, Class, Name};
 
+use std::error::Error;
 use std::io::Read;
 
 use hyper::Client;
@@ -28,17 +29,17 @@ impl KickassSearch {
 }
 
 impl SearchProvider for KickassSearch {
-    fn search(&self, term: &str) -> Vec<Torrent> {
-        let res = self.connection.get(&format!("https://kat.cr/usearch/{}", term))
+    fn search(&self, term: &str) -> Result<Vec<Torrent>,Box<Error>> {
+        let res = try!(self.connection.get(&format!("https://kat.cr/usearch/{}", term))
             .header(Connection::close())
-            .send().unwrap();
+            .send());
 
         let mut body = String::new();
         let mut d = GzDecoder::new(res).unwrap();
-        d.read_to_string(&mut body).unwrap();
+        try!(d.read_to_string(&mut body));
 
         let document = Document::from_str(&body);
-        parse_kickass(&document)
+        Ok(parse_kickass(&document))
     }
 }
 

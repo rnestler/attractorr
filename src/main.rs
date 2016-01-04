@@ -28,7 +28,10 @@ fn main() {
     let keyword = args.get_str("<searchterm>");
     let mut torrents = vec![];
     for provider in providers.iter() {
-        torrents.push(provider.search(keyword));
+        match provider.search(keyword) {
+            Ok(results) => torrents.extend(results),
+            Err(err) => println!("Error: {}", err),
+        }
     }
 
     // print out all torrents
