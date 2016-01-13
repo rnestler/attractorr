@@ -1,17 +1,10 @@
-extern crate hyper;
-extern crate select;
+extern crate torrent_search;
 extern crate docopt;
 
-mod torrent;
-
-mod search_providers;
-use search_providers::SearchProvider;
-use search_providers::pirate_bay_search::PirateBaySearch;
-use search_providers::kickass_search::KickassSearch;
-
+use torrent_search::SearchProvider;
 
 static USAGE: &'static str = "
-Usage: torrent-search <searchterm>
+Usage: torrent-search-cli <searchterm>
 ";
 
 fn main() {
@@ -19,10 +12,7 @@ fn main() {
         .unwrap_or_else(|e| e.exit());
 
     // create all search providers
-    let providers: Vec<Box<SearchProvider>> = vec![
-        Box::new(PirateBaySearch::new()),
-        Box::new(KickassSearch::new()),
-    ];
+    let providers = torrent_search::get_search_providers();
 
     // search for torrents
     let keyword = args.get_str("<searchterm>");

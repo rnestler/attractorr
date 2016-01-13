@@ -8,10 +8,12 @@ environment:
       BITS: 64
 install:
   - ps: Start-FileDownload "https://static.rust-lang.org/dist/rust-${env:RUST_VERSION}-${env:TARGET}.exe"
-  - rust-%RUST_VERSION%-%TARGET%.exe /VERYSILENT /NORESTART /DIR="C:\Rust"
+  - rust-%RUST_VERSION%-%TARGET%.exe /VERYSILENT /NORESTART /COMPONENTS="Rustc,Cargo,Std" /DIR="C:\Rust"
   - SET PATH=C:\Rust\bin
   - SET PATH=C:\msys64\mingw%BITS%\bin;C:\msys64\usr\bin;%PATH%
   - echo %PATH%
+  - if "%BITS%" == "32" pacman --noconfirm -S mingw-w64-i686-gtk3
+  - if "%BITS%" == "64" pacman --noconfirm -S mingw-w64-x86_64-gtk3
   - gcc --version
   - rustc -V
   - cargo -V
