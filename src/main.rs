@@ -3,6 +3,7 @@ extern crate select;
 extern crate docopt;
 
 mod torrent;
+use torrent::Torrent;
 
 mod search_providers;
 use search_providers::SearchProvider;
@@ -40,6 +41,8 @@ fn main() {
             Err(err) => println!("Error: {}", err),
         }
     }
+
+    torrents.sort_by(Torrent::compare_seeders);
 
     // print out all torrents
     for torrent in torrents.iter() {
