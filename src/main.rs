@@ -36,6 +36,15 @@ fn main() {
 
     // print out all torrents
     for torrent in torrents.iter() {
-        println!("{:#?}", torrent);
+        if let Some(seeders) = torrent.seeders {
+            if let Some(leechers) = torrent.leechers {
+                print!("S:{}/L:{} - ", seeders, leechers);
+            } else {
+                print!("S:{} - ", seeders);
+            }
+        }
+        println!("{}", torrent.name);
+        println!("{}", torrent.magnet_link);
+        println!("");
     }
 }
