@@ -1,6 +1,9 @@
 extern crate hyper;
 extern crate select;
 extern crate docopt;
+extern crate ansi_term;
+
+use ansi_term::Colour::{Red, Green};
 
 mod torrent;
 
@@ -37,11 +40,11 @@ fn main() {
     // print out all torrents
     for torrent in torrents.iter() {
         if let Some(seeders) = torrent.seeders {
+            print!("{}", Green.paint(format!("S:{}", seeders)));
             if let Some(leechers) = torrent.leechers {
-                print!("S:{}/L:{} - ", seeders, leechers);
-            } else {
-                print!("S:{} - ", seeders);
+                print!("/{}", Red.paint(format!("L:{}", leechers)));
             }
+            print!(" - ");
         }
         println!("{}", torrent.name);
         println!("{}", torrent.magnet_link);
