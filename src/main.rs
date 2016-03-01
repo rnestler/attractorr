@@ -11,12 +11,15 @@ use search_providers::kickass_search::KickassSearch;
 
 
 static USAGE: &'static str = "
-Usage: torrent-search <searchterm>
+Usage: torrent-search <searchterm>...
 ";
 
 fn main() {
+    // parse arguments
     let args = docopt::Docopt::new(USAGE).and_then(|d| d.parse())
         .unwrap_or_else(|e| e.exit());
+
+    let keyword = args.get_vec("<searchterm>").join(" ");
 
     // create all search providers
     let providers: Vec<Box<SearchProvider>> = vec![
@@ -25,10 +28,9 @@ fn main() {
     ];
 
     // search for torrents
-    let keyword = args.get_str("<searchterm>");
     let mut torrents = vec![];
     for provider in providers.iter() {
-        match provider.search(keyword) {
+        match provider.search(&keyword) {
             Ok(results) => torrents.extend(results),
             Err(err) => println!("Error: {}", err),
         }
