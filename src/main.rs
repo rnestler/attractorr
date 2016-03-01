@@ -36,6 +36,6 @@ fn main() {
 
     // print out all torrents
     for torrent in torrents.iter() {
-        println!("{:#?}", torrent);
+        torrent.print();
     }
 }
