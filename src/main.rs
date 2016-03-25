@@ -11,7 +11,12 @@ use search_providers::kickass_search::KickassSearch;
 
 
 static USAGE: &'static str = "
-Usage: torrent-search <searchterm>...
+Usage:
+  torrent-search <searchterm>...
+  torrent-search (-h | --help)
+
+Options:
+  -h --help     Show this screen.
 ";
 
 fn main() {
