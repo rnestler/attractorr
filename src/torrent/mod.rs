@@ -1,6 +1,7 @@
 extern crate ansi_term;
 
 use self::ansi_term::Colour::{Red, Green};
+use std::cmp::Ordering;
 
 #[derive(Debug)]
 pub struct Torrent {
@@ -22,5 +23,13 @@ impl Torrent {
         println!("{}", self.name);
         println!("{}", self.magnet_link);
         println!("");
+    }
+
+    pub fn compare_seeders(&self, other: &Torrent) -> Ordering {
+        self.seeders.cmp(&other.seeders)
+    }
+
+    pub fn compare_leechers(&self, other: &Torrent) -> Ordering {
+        self.leechers.cmp(&other.leechers)
     }
 }

@@ -6,6 +6,7 @@ dependencies = [
  "docopt 0.6.78 (registry+https://github.com/rust-lang/crates.io-index)",
  "flate2 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
  "hyper 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
  "select 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
