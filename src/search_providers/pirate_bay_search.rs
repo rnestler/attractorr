@@ -34,7 +34,7 @@ impl SearchProvider for PirateBaySearch {
         let mut body = String::new();
         try!(res.read_to_string(&mut body));
 
-        let document = Document::from_str(&body);
+        let document = Document::from(&*body);
         Ok(parse_piratebay(&document))
     }
 }
@@ -82,7 +82,7 @@ mod test {
 
     #[test]
     fn test_parse_piratebay() {
-        let document = Document::from_str(TEST_DATA);
+        let document = Document::from(TEST_DATA);
         let torrents = super::parse_piratebay(&document);
         assert_eq!(torrents.len(), 16);
         for torrent in torrents.iter() {

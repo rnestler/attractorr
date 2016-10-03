@@ -38,7 +38,7 @@ impl SearchProvider for KickassSearch {
         let mut d = GzDecoder::new(res).unwrap();
         try!(d.read_to_string(&mut body));
 
-        let document = Document::from_str(&body);
+        let document = Document::from(&*body);
         Ok(parse_kickass(&document))
     }
 }
@@ -87,7 +87,7 @@ mod test {
 
     #[test]
     fn test_parse_kickass() {
-        let document = Document::from_str(TEST_DATA);
+        let document = Document::from(TEST_DATA);
         let torrents = super::parse_kickass(&document);
         assert_eq!(torrents.len(), 25);
         for torrent in torrents.iter() {
