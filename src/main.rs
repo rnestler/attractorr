@@ -9,7 +9,6 @@ use torrent::Torrent;
 mod search_providers;
 use search_providers::SearchProvider;
 use search_providers::pirate_bay_search::PirateBaySearch;
-use search_providers::kickass_search::KickassSearch;
 
 
 static USAGE: &'static str = "
@@ -46,7 +45,6 @@ fn main() {
     // create all search providers
     let providers: Vec<Box<SearchProvider>> = vec![
         Box::new(PirateBaySearch::new()),
-        Box::new(KickassSearch::new()),
     ];
 
     // search for torrents
