@@ -1,5 +1,3 @@
-extern crate hyper;
-extern crate select;
 extern crate docopt;
 extern crate rustc_serialize;
 

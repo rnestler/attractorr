@@ -1,35 +1,40 @@
 extern crate hyper;
+extern crate hyper_native_tls;
 extern crate select;
 
-use select::document::Document;
-use select::node::Node;
-use select::predicate::{Attr, Class, Name};
+use self::select::document::Document;
+use self::select::node::Node;
+use self::select::predicate::{Attr, Class, Name};
 
 use std::error::Error;
 use std::io::Read;
 
-use hyper::Client;
-use hyper::header::Connection;
+use self::hyper::Client;
+use self::hyper::header::Connection;
+use self::hyper::net::HttpsConnector;
+use self::hyper_native_tls::NativeTlsClient;
 
 use torrent::Torrent;
 use search_providers::SearchProvider;
 
 
 pub struct PirateBaySearch {
-    connection: hyper::Client
+    connection: Client
 }
 
 impl PirateBaySearch {
     pub fn new() -> PirateBaySearch {
-        PirateBaySearch{connection: Client::new()}
+        let tls = NativeTlsClient::new().unwrap();
+        PirateBaySearch{connection: Client::with_connector(HttpsConnector::new(tls))}
     }
 }
 
 impl SearchProvider for PirateBaySearch {
     fn search(&self, term: &str) -> Result<Vec<Torrent>,Box<Error>> {
-        let mut res = try!(self.connection.get(&format!("https://thepiratebay.se/search/{}/0/99/0", term))
+        let mut res = self.connection
+            .get(&format!("https://thepiratebay.se/search/{}/0/99/0", term))
             .header(Connection::close())
-            .send());
+            .send()?;
 
         let mut body = String::new();
         try!(res.read_to_string(&mut body));
