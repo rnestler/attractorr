@@ -1,10 +1,10 @@
 environment:
   matrix:
     - TARGET: i686-pc-windows-gnu
-      RUST_VERSION: 1.31.0
+      RUST_VERSION: 1.32.0
       BITS: 32
     - TARGET: x86_64-pc-windows-gnu
-      RUST_VERSION: 1.31.0
+      RUST_VERSION: 1.32.0
       BITS: 64
 install:
   - ps: Start-FileDownload "https://static.rust-lang.org/dist/rust-${env:RUST_VERSION}-${env:TARGET}.exe"

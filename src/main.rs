@@ -1,5 +1,7 @@
 extern crate docopt;
-extern crate rustc_serialize;
+extern crate hyper;
+extern crate select;
+extern crate serde;
 
 mod torrent;
 use torrent::Torrent;
@@ -7,6 +9,7 @@ use torrent::Torrent;
 mod search_providers;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
+use serde::Deserialize;
 
 static USAGE: &'static str = "
 Usage:
@@ -18,13 +21,13 @@ Options:
   --sort=SORTMETHOD     Sort results by the number of: seeders or leechers.
 ";
 
-#[derive(Debug, RustcDecodable)]
+#[derive(Debug, Deserialize)]
 enum SortMethods {
     Seeders,
     Leechers,
 }
 
-#[derive(Debug, RustcDecodable)]
+#[derive(Debug, Deserialize)]
 struct Args {
     arg_searchterm: Vec<String>,
     flag_sort: Option<SortMethods>,
@@ -33,7 +36,7 @@ struct Args {
 fn main() {
     // parse arguments
     let args: Args = docopt::Docopt::new(USAGE)
-        .and_then(|d| d.decode())
+        .and_then(|d| d.deserialize())
         .unwrap_or_else(|e| e.exit());
 
     let keyword = &args.arg_searchterm.join(" ");
