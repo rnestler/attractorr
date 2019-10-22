@@ -5,9 +5,8 @@ mod torrent;
 use torrent::Torrent;
 
 mod search_providers;
-use search_providers::SearchProvider;
 use search_providers::pirate_bay_search::PirateBaySearch;
-
+use search_providers::SearchProvider;
 
 static USAGE: &'static str = "
 Usage:
@@ -18,7 +17,6 @@ Options:
   -h --help             Show this screen.
   --sort=SORTMETHOD     Sort results by the number of: seeders or leechers.
 ";
-
 
 #[derive(Debug, RustcDecodable)]
 enum SortMethods {
@@ -34,16 +32,15 @@ struct Args {
 
 fn main() {
     // parse arguments
-    let args: Args = docopt::Docopt::new(USAGE).and_then(|d| d.decode())
+    let args: Args = docopt::Docopt::new(USAGE)
+        .and_then(|d| d.decode())
         .unwrap_or_else(|e| e.exit());
 
     let keyword = &args.arg_searchterm.join(" ");
     let sort_method = args.flag_sort;
 
     // create all search providers
-    let providers: Vec<Box<SearchProvider>> = vec![
-        Box::new(PirateBaySearch::new()),
-    ];
+    let providers: Vec<Box<SearchProvider>> = vec![Box::new(PirateBaySearch::new())];
 
     // search for torrents
     let mut torrents = vec![];
@@ -55,7 +52,7 @@ fn main() {
     }
 
     if let Some(sort_method) = sort_method {
-        match sort_method  {
+        match sort_method {
             SortMethods::Seeders => torrents.sort_by(Torrent::compare_seeders),
             SortMethods::Leechers => torrents.sort_by(Torrent::compare_leechers),
         };
