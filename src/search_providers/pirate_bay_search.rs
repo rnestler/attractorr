@@ -49,17 +49,17 @@ impl SearchProvider for PirateBaySearch {
 fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
     let name = try!(row
         .find(Class("detLink"))
-        .first()
+        .nth(0)
         .ok_or("Could not find 'detLink'".to_owned())
         .and_then(|n| Ok(n.text())));
 
     let link = try!(row
         .find(Attr("title", "Download this torrent using magnet"))
-        .first()
+        .nth(0)
         .ok_or("Could not find magnet link".to_owned()));
     // table data is |Type|Name|Seeders|Leechers|
     let tds = row.find(Name("td"));
-    let mut tds = tds.iter().skip(2);
+    let mut tds = tds.skip(2);
     let seeders = tds.next().and_then(|v| v.text().parse::<u32>().ok());
     let leechers = tds.next().and_then(|v| v.text().parse::<u32>().ok());
 
@@ -76,7 +76,7 @@ fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
 }
 
 fn parse_piratebay(document: &Document) -> Vec<Torrent> {
-    let search_result = document.find(Attr("id", "searchResult"));
+    let search_result = document.find(Attr("id", "searchResult")).into_selection();
 
     let mut result = vec![];
     // iterate table rows but skip header

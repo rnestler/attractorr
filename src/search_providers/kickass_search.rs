@@ -52,13 +52,13 @@ impl SearchProvider for KickassSearch {
 fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
     let name = try!(row
         .find(Class("torrents_table__torrent_title"))
-        .first()
+        .nth(0)
         .ok_or("Could not find 'torrents_table__torrent_title'".to_owned())
         .and_then(|n| Ok(n.text())));
 
     let link = try!(row
         .find(Attr("title", "Torrent magnet link"))
-        .first()
+        .nth(0)
         .ok_or("Could not find magnet link".to_owned()));
 
     let magnet_link = try!(link
@@ -67,7 +67,7 @@ fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
 
     // table data is |Name|Size|Files|Age|Seeders|Leechers|
     let tds = row.find(Name("td"));
-    let mut tds = tds.iter().skip(4);
+    let mut tds = tds.skip(4);
     let seeders = tds.next().and_then(|v| v.text().parse::<u32>().ok());
     let leechers = tds.next().and_then(|v| v.text().parse::<u32>().ok());
 
@@ -82,7 +82,7 @@ fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
 }
 
 fn parse_kickass(document: &Document) -> Vec<Torrent> {
-    let search_result = document.find(Attr("class", "tab_content"));
+    let search_result = document.find(Attr("class", "tab_content")).into_selection();
 
     let mut result = vec![];
     // iterate table rows but skip header

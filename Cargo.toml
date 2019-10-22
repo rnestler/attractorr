@@ -3,7 +3,7 @@ name = "torrent-search"
 version = "0.1.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 [dependencies]
-select = "^0.3"
+select = "^0.4"
 hyper = "^0.10"
 hyper-native-tls = "^0.3"
 docopt = "^1.1"
