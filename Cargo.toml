@@ -4,7 +4,8 @@ version = "0.1.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 [dependencies]
 select = "^0.3"
-hyper = "^0.9"
+hyper = "^0.10"
+hyper-native-tls = "^0.3"
 docopt = "^0.6"
 flate2 = "^0.2"
 ansi_term = "^0.9"

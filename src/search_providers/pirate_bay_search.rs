@@ -1,35 +1,42 @@
 extern crate hyper;
+extern crate hyper_native_tls;
 extern crate select;
 
-use select::document::Document;
-use select::node::Node;
-use select::predicate::{Attr, Class, Name};
+use self::select::document::Document;
+use self::select::node::Node;
+use self::select::predicate::{Attr, Class, Name};
 
 use std::error::Error;
 use std::io::Read;
 
-use hyper::Client;
-use hyper::header::Connection;
+use self::hyper::header::Connection;
+use self::hyper::net::HttpsConnector;
+use self::hyper::Client;
+use self::hyper_native_tls::NativeTlsClient;
 
-use torrent::Torrent;
 use search_providers::SearchProvider;
-
+use torrent::Torrent;
 
 pub struct PirateBaySearch {
-    connection: hyper::Client
+    connection: Client,
 }
 
 impl PirateBaySearch {
     pub fn new() -> PirateBaySearch {
-        PirateBaySearch{connection: Client::new()}
+        let tls = NativeTlsClient::new().unwrap();
+        PirateBaySearch {
+            connection: Client::with_connector(HttpsConnector::new(tls)),
+        }
     }
 }
 
 impl SearchProvider for PirateBaySearch {
-    fn search(&self, term: &str) -> Result<Vec<Torrent>,Box<Error>> {
-        let mut res = try!(self.connection.get(&format!("https://thepiratebay.se/search/{}/0/99/0", term))
+    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error>> {
+        let mut res = self
+            .connection
+            .get(&format!("https://thepiratebay.org/search/{}/0/99/0", term))
             .header(Connection::close())
-            .send());
+            .send()?;
 
         let mut body = String::new();
         try!(res.read_to_string(&mut body));
@@ -40,25 +47,32 @@ impl SearchProvider for PirateBaySearch {
 }
 
 fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
-    let name = try!(row.find(Class("detLink")).first()
-                    .ok_or("Could not find 'detLink'".to_owned())
-                    .and_then(|n| Ok(n.text()))
-                   );
+    let name = try!(row
+        .find(Class("detLink"))
+        .first()
+        .ok_or("Could not find 'detLink'".to_owned())
+        .and_then(|n| Ok(n.text())));
 
-    let link = try!(row.find(Attr("title", "Download this torrent using magnet")).first()
-                    .ok_or("Could not find magnet link".to_owned())
-                    );
+    let link = try!(row
+        .find(Attr("title", "Download this torrent using magnet"))
+        .first()
+        .ok_or("Could not find magnet link".to_owned()));
     // table data is |Type|Name|Seeders|Leechers|
     let tds = row.find(Name("td"));
     let mut tds = tds.iter().skip(2);
-    let seeders = tds.next()
-        .and_then(|v| v.text().parse::<u32>().ok());
-    let leechers = tds.next()
-        .and_then(|v| v.text().parse::<u32>().ok());
+    let seeders = tds.next().and_then(|v| v.text().parse::<u32>().ok());
+    let leechers = tds.next().and_then(|v| v.text().parse::<u32>().ok());
 
-    let magnet_link = try!(link.attr("href").ok_or("Could not find href element".to_owned()));
+    let magnet_link = try!(link
+        .attr("href")
+        .ok_or("Could not find href element".to_owned()));
 
-    Ok(Torrent{name: name, magnet_link: magnet_link.to_owned(), seeders: seeders, leechers: leechers})
+    Ok(Torrent {
+        name: name,
+        magnet_link: magnet_link.to_owned(),
+        seeders: seeders,
+        leechers: leechers,
+    })
 }
 
 fn parse_piratebay(document: &Document) -> Vec<Torrent> {
@@ -77,7 +91,7 @@ fn parse_piratebay(document: &Document) -> Vec<Torrent> {
 
 #[cfg(test)]
 mod test {
-    use select::document::Document;
+    use super::select::document::Document;
     static TEST_DATA: &'static str = include_str!("test_data/piratebay.html");
 
     #[test]
@@ -92,4 +106,3 @@ mod test {
         }
     }
 }
-
