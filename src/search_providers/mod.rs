@@ -4,5 +4,5 @@ use torrent::Torrent;
 pub mod pirate_bay_search;
 
 pub trait SearchProvider {
-    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<Error>>;
+    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error>>;
 }

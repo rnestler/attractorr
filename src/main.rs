@@ -40,7 +40,7 @@ fn main() {
     let sort_method = args.flag_sort;
 
     // create all search providers
-    let providers: Vec<Box<SearchProvider>> = vec![Box::new(PirateBaySearch::new())];
+    let providers: Vec<Box<dyn SearchProvider>> = vec![Box::new(PirateBaySearch::new())];
 
     // search for torrents
     let mut torrents = vec![];

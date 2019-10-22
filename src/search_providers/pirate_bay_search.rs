@@ -31,7 +31,7 @@ impl PirateBaySearch {
 }
 
 impl SearchProvider for PirateBaySearch {
-    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<Error>> {
+    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error>> {
         let mut res = self
             .connection
             .get(&format!("https://thepiratebay.org/search/{}/0/99/0", term))
