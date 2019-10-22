@@ -1,6 +1,7 @@
 extern crate hyper;
 extern crate select;
 extern crate flate2;
+extern crate hyper_native_tls;
 
 use self::flate2::read::GzDecoder;
 
@@ -12,7 +13,9 @@ use std::error::Error;
 use std::io::Read;
 
 use hyper::Client;
-use hyper::header::Connection;
+use self::hyper_native_tls::NativeTlsClient;
+use self::hyper::net::HttpsConnector;
+use hyper::header::{Connection, UserAgent};
 
 use torrent::Torrent;
 use search_providers::SearchProvider;
@@ -24,19 +27,24 @@ pub struct KickassSearch {
 
 impl KickassSearch {
     pub fn new() -> KickassSearch {
-        KickassSearch{connection: Client::new()}
+        let tls = NativeTlsClient::new().unwrap();
+        KickassSearch{
+            connection: Client::with_connector(HttpsConnector::new(tls)),
+        }
     }
 }
 
 impl SearchProvider for KickassSearch {
     fn search(&self, term: &str) -> Result<Vec<Torrent>,Box<Error>> {
-        let res = try!(self.connection.get(&format!("https://kat.cr/usearch/{}", term))
+        let mut res = self
+            .connection
+            .get(&format!("https://katcr.co/katsearch/page/1/{}", term))
             .header(Connection::close())
-            .send());
+            .header(UserAgent("Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0".into()))
+            .send()?;
 
         let mut body = String::new();
-        let mut d = GzDecoder::new(res).unwrap();
-        try!(d.read_to_string(&mut body));
+        res.read_to_string(&mut body)?;
 
         let document = Document::from(&*body);
         Ok(parse_kickass(&document))
@@ -44,8 +52,8 @@ impl SearchProvider for KickassSearch {
 }
 
 fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
-    let name = try!(row.find(Class("cellMainLink")).first()
-                    .ok_or("Could not find 'cellMainLink'".to_owned())
+    let name = try!(row.find(Class("torrents_table__torrent_title")).first()
+                    .ok_or("Could not find 'torrents_table__torrent_title'".to_owned())
                     .and_then(|n| Ok(n.text()))
                    );
 
@@ -63,11 +71,13 @@ fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
     let leechers = tds.next()
         .and_then(|v| v.text().parse::<u32>().ok());
 
-    Ok(Torrent{name: name, magnet_link: magnet_link.to_owned(), seeders: seeders, leechers: leechers})
+    let name = name.trim().to_owned();
+    let magnet_link = magnet_link.replace(' ', "%20");
+    Ok(Torrent{name, magnet_link, seeders, leechers})
 }
 
 fn parse_kickass(document: &Document) -> Vec<Torrent> {
-    let search_result = document.find(Attr("class", "data"));
+    let search_result = document.find(Attr("class", "tab_content"));
 
     let mut result = vec![];
     // iterate table rows but skip header
@@ -89,7 +99,7 @@ mod test {
     fn test_parse_kickass() {
         let document = Document::from(TEST_DATA);
         let torrents = super::parse_kickass(&document);
-        assert_eq!(torrents.len(), 25);
+        assert_eq!(torrents.len(), 1);
         for torrent in torrents.iter() {
             assert!(torrent.magnet_link.starts_with("magnet:?"));
             assert!(torrent.seeders.is_some());
