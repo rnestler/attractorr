@@ -9,6 +9,7 @@ use torrent::Torrent;
 mod search_providers;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
+use search_providers::kickass_search::KickassSearch;
 use serde::Deserialize;
 
 static USAGE: &'static str = "
@@ -43,7 +44,10 @@ fn main() {
     let sort_method = args.flag_sort;
 
     // create all search providers
-    let providers: Vec<Box<dyn SearchProvider>> = vec![Box::new(PirateBaySearch::new())];
+    let providers: Vec<Box<dyn SearchProvider>> = vec![
+        Box::new(PirateBaySearch::new()),
+        Box::new(KickassSearch::new()),
+    ];
 
     // search for torrents
     let mut torrents = vec![];
