@@ -7,9 +7,9 @@ mod torrent;
 use torrent::Torrent;
 
 mod search_providers;
+use search_providers::kickass_search::KickassSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
-use search_providers::kickass_search::KickassSearch;
 use serde::Deserialize;
 
 static USAGE: &'static str = "
