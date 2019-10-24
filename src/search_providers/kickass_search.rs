@@ -50,6 +50,10 @@ impl SearchProvider for KickassSearch {
         let document = Document::from(&*body);
         Ok(parse_kickass(&document))
     }
+
+    fn get_name(&self) -> &'static str {
+        "KAT"
+    }
 }
 
 fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
