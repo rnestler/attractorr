@@ -1,6 +1,0 @@
-language: rust
-rust:
-  - stable
-cache:
-  directories:
-    - $HOME/.cargo

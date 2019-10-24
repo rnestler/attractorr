@@ -1,0 +1,108 @@
+version: 2
+jobs:
+
+  test:
+    docker:
+      - image: rust:1.36
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-cargo-cache-{{ arch }}-{{ .Branch }}
+            - v1-cargo-cache-{{ arch }}
+      - run:
+          name: Install dependencies
+          command: apt-get update && apt-get install -y libdbus-glib-1-dev
+      - run:
+          name: Show versions
+          command: rustc --version && cargo --version
+      - run:
+          name: Build
+          command: cargo build
+      - run:
+          name: Run tests
+          command: cargo test
+      - save_cache:
+          key: v1-cargo-cache-{{ arch }}-{{ .Branch }}
+          paths:
+            - target
+            - /usr/local/cargo
+      - save_cache:
+          key: v1-cargo-cache-{{ arch }}
+          paths:
+            - target
+            - /usr/local/cargo
+  lint:
+    docker:
+      - image: rust:1.36
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-cargo-lint-cache
+      - run:
+          name: Install dependencies
+          command: apt-get update && apt-get install -y libdbus-glib-1-dev
+      - run: rustup component add clippy
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - save_cache:
+          key: v1-cargo-lint-cache
+          paths:
+            - /usr/local/cargo
+  fmt:
+    docker:
+      - image: rust:1.36
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-cargo-fmt-cache
+      - run: rustup component add rustfmt
+      - run: cargo fmt -- --check
+      - save_cache:
+          key: v1-cargo-lint-cache
+          paths:
+            - /usr/local/cargo
+  audit:
+    docker:
+      - image: rust:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-cargo-audit-cache
+      - run:
+          name: Install cargo-audit
+          command: cargo install --force cargo-audit
+      - run:
+          name: Run cargo-audit
+          command: cargo update && cargo audit
+      - save_cache:
+          key: v1-cargo-audit-cache
+          paths:
+            - /usr/local/cargo
+
+workflows:
+  version: 2
+
+  # Build on push
+  on_push:
+    jobs:
+      - test
+      - lint
+      - fmt
+      - audit
+
+  # Build master every week on Monday at 04:00 am
+  weekly:
+    triggers:
+      - schedule:
+          cron: "0 4 * * 1"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - test
+      - lint
+      - audit
