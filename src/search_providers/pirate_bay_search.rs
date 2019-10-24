@@ -9,6 +9,8 @@ use self::select::predicate::{Attr, Class, Name};
 use std::error::Error;
 use std::io::Read;
 
+use log::{error, info};
+
 use self::hyper::header::Connection;
 use self::hyper::net::HttpsConnector;
 use self::hyper::Client;
@@ -32,6 +34,7 @@ impl PirateBaySearch {
 
 impl SearchProvider for PirateBaySearch {
     fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error>> {
+        info!("Searching on PirateBay");
         let mut res = self
             .connection
             .get(&format!("https://thepiratebay.org/search/{}/0/99/0", term))
@@ -83,7 +86,7 @@ fn parse_piratebay(document: &Document) -> Vec<Torrent> {
     for table_row in search_result.find(Name("tr")).iter().skip(1) {
         match parse_piratebay_entry(&table_row) {
             Ok(torrent) => result.push(torrent),
-            Err(e) => println!("{}", e),
+            Err(e) => error!("{}", e),
         }
     }
     result

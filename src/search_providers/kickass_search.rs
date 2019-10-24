@@ -9,6 +9,8 @@ use select::predicate::{Attr, Class, Name};
 use std::error::Error;
 use std::io::Read;
 
+use log::{error, info};
+
 use self::hyper::net::HttpsConnector;
 use self::hyper_native_tls::NativeTlsClient;
 use hyper::header::{Connection, UserAgent};
@@ -32,6 +34,7 @@ impl KickassSearch {
 
 impl SearchProvider for KickassSearch {
     fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<Error>> {
+        info!("Searching on Kickass");
         let mut res = self
             .connection
             .get(&format!("https://katcr.co/katsearch/page/1/{}", term))
@@ -89,7 +92,7 @@ fn parse_kickass(document: &Document) -> Vec<Torrent> {
     for table_row in search_result.find(Name("tr")).iter().skip(1) {
         match parse_kickass_entry(&table_row) {
             Ok(torrent) => result.push(torrent),
-            Err(e) => println!("{}", e),
+            Err(e) => error!("{}", e),
         }
     }
     result

@@ -1,5 +1,6 @@
 extern crate docopt;
 extern crate hyper;
+extern crate log;
 extern crate select;
 extern crate serde;
 
@@ -7,6 +8,7 @@ mod torrent;
 use torrent::Torrent;
 
 mod search_providers;
+use log::error;
 use search_providers::kickass_search::KickassSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
@@ -35,6 +37,7 @@ struct Args {
 }
 
 fn main() {
+    env_logger::init();
     // parse arguments
     let args: Args = docopt::Docopt::new(USAGE)
         .and_then(|d| d.deserialize())
@@ -54,7 +57,7 @@ fn main() {
     for provider in providers.iter() {
         match provider.search(&keyword) {
             Ok(results) => torrents.extend(results),
-            Err(err) => println!("Error: {}", err),
+            Err(err) => error!("Error: {}", err),
         }
     }
 
