@@ -57,13 +57,13 @@ fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
     let name = try!(row
         .find(Class("detLink"))
         .nth(0)
-        .ok_or("Could not find 'detLink'".to_owned())
+        .ok_or_else(|| "Could not find 'detLink'".to_owned())
         .and_then(|n| Ok(n.text())));
 
     let link = try!(row
         .find(Attr("title", "Download this torrent using magnet"))
         .nth(0)
-        .ok_or("Could not find magnet link".to_owned()));
+        .ok_or_else(|| "Could not find magnet link".to_owned()));
     // table data is |Type|Name|Seeders|Leechers|
     let tds = row.find(Name("td"));
     let mut tds = tds.skip(2);
@@ -72,13 +72,13 @@ fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
 
     let magnet_link = try!(link
         .attr("href")
-        .ok_or("Could not find href element".to_owned()));
+        .ok_or_else(|| "Could not find href element".to_owned()));
 
     Ok(Torrent {
-        name: name,
+        name,
         magnet_link: magnet_link.to_owned(),
-        seeders: seeders,
-        leechers: leechers,
+        seeders,
+        leechers,
     })
 }
 
