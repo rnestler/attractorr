@@ -35,6 +35,7 @@ struct Args {
 }
 
 fn main() {
+    env_logger::init();
     // parse arguments
     let args: Args = docopt::Docopt::new(USAGE)
         .and_then(|d| d.deserialize())
