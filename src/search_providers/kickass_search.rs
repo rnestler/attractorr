@@ -1,9 +1,7 @@
 extern crate hyper;
-extern crate select;
 extern crate flate2;
 extern crate hyper_native_tls;
-
-use self::flate2::read::GzDecoder;
+extern crate select;
 
 use select::document::Document;
 use select::node::Node;
@@ -12,35 +10,36 @@ use select::predicate::{Attr, Class, Name};
 use std::error::Error;
 use std::io::Read;
 
-use hyper::Client;
-use self::hyper_native_tls::NativeTlsClient;
 use self::hyper::net::HttpsConnector;
+use self::hyper_native_tls::NativeTlsClient;
 use hyper::header::{Connection, UserAgent};
+use hyper::Client;
 
-use torrent::Torrent;
 use search_providers::SearchProvider;
-
+use torrent::Torrent;
 
 pub struct KickassSearch {
-    connection: hyper::Client
+    connection: hyper::Client,
 }
 
 impl KickassSearch {
     pub fn new() -> KickassSearch {
         let tls = NativeTlsClient::new().unwrap();
-        KickassSearch{
+        KickassSearch {
             connection: Client::with_connector(HttpsConnector::new(tls)),
         }
     }
 }
 
 impl SearchProvider for KickassSearch {
-    fn search(&self, term: &str) -> Result<Vec<Torrent>,Box<Error>> {
+    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<Error>> {
         let mut res = self
             .connection
             .get(&format!("https://katcr.co/katsearch/page/1/{}", term))
             .header(Connection::close())
-            .header(UserAgent("Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0".into()))
+            .header(UserAgent(
+                "Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0".into(),
+            ))
             .send()?;
 
         let mut body = String::new();
@@ -52,28 +51,35 @@ impl SearchProvider for KickassSearch {
 }
 
 fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
-    let name = try!(row.find(Class("torrents_table__torrent_title")).first()
-                    .ok_or("Could not find 'torrents_table__torrent_title'".to_owned())
-                    .and_then(|n| Ok(n.text()))
-                   );
+    let name = try!(row
+        .find(Class("torrents_table__torrent_title"))
+        .first()
+        .ok_or("Could not find 'torrents_table__torrent_title'".to_owned())
+        .and_then(|n| Ok(n.text())));
 
-    let link = try!(row.find(Attr("title", "Torrent magnet link")).first()
-                    .ok_or("Could not find magnet link".to_owned())
-                    );
+    let link = try!(row
+        .find(Attr("title", "Torrent magnet link"))
+        .first()
+        .ok_or("Could not find magnet link".to_owned()));
 
-    let magnet_link = try!(link.attr("href").ok_or("Could not find href element".to_owned()));
+    let magnet_link = try!(link
+        .attr("href")
+        .ok_or("Could not find href element".to_owned()));
 
     // table data is |Name|Size|Files|Age|Seeders|Leechers|
     let tds = row.find(Name("td"));
     let mut tds = tds.iter().skip(4);
-    let seeders = tds.next()
-        .and_then(|v| v.text().parse::<u32>().ok());
-    let leechers = tds.next()
-        .and_then(|v| v.text().parse::<u32>().ok());
+    let seeders = tds.next().and_then(|v| v.text().parse::<u32>().ok());
+    let leechers = tds.next().and_then(|v| v.text().parse::<u32>().ok());
 
     let name = name.trim().to_owned();
     let magnet_link = magnet_link.replace(' ', "%20");
-    Ok(Torrent{name, magnet_link, seeders, leechers})
+    Ok(Torrent {
+        name,
+        magnet_link,
+        seeders,
+        leechers,
+    })
 }
 
 fn parse_kickass(document: &Document) -> Vec<Torrent> {
@@ -107,4 +113,3 @@ mod test {
         }
     }
 }
-
