@@ -47,6 +47,10 @@ impl SearchProvider for PirateBaySearch {
         let document = Document::from(&*body);
         Ok(parse_piratebay(&document))
     }
+
+    fn get_name(&self) -> &'static str {
+        "PB"
+    }
 }
 
 fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {

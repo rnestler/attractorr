@@ -57,7 +57,7 @@ fn main() {
     for provider in providers.iter() {
         match provider.search(&keyword) {
             Ok(results) => torrents.extend(results),
-            Err(err) => error!("Error: {}", err),
+            Err(err) => error!("[{}] Error: {}", provider.get_name(), err),
         }
     }
 
