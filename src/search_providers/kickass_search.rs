@@ -1,5 +1,4 @@
 extern crate hyper;
-extern crate flate2;
 extern crate hyper_native_tls;
 extern crate select;
 
