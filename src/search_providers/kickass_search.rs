@@ -60,17 +60,17 @@ fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
     let name = try!(row
         .find(Class("torrents_table__torrent_title"))
         .nth(0)
-        .ok_or("Could not find 'torrents_table__torrent_title'".to_owned())
+        .ok_or_else(|| "Could not find 'torrents_table__torrent_title'".to_owned())
         .and_then(|n| Ok(n.text())));
 
     let link = try!(row
         .find(Attr("title", "Torrent magnet link"))
         .nth(0)
-        .ok_or("Could not find magnet link".to_owned()));
+        .ok_or_else(|| "Could not find magnet link".to_owned()));
 
     let magnet_link = try!(link
         .attr("href")
-        .ok_or("Could not find href element".to_owned()));
+        .ok_or_else(|| "Could not find href element".to_owned()));
 
     // table data is |Name|Size|Files|Age|Seeders|Leechers|
     let tds = row.find(Name("td"));

@@ -22,7 +22,7 @@ impl Torrent {
         }
         println!("{}", self.name);
         println!("{}", self.magnet_link);
-        println!("");
+        println!();
     }
 
     pub fn compare_seeders(&self, other: &Torrent) -> Ordering {
