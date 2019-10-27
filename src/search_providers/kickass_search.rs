@@ -1,51 +1,51 @@
-use hyper;
-use hyper_native_tls;
-use select;
+use crate::search_providers::SearchProvider;
+use crate::torrent::Torrent;
 
+use async_trait::async_trait;
+use hyper::Client;
+use hyper_tls::HttpsConnector;
+use log::{error, info};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Attr, Class, Name};
 
 use std::error::Error;
-use std::io::Read;
-
-use log::{error, info};
-
-use self::hyper::net::HttpsConnector;
-use self::hyper_native_tls::NativeTlsClient;
-use hyper::header::{Connection, UserAgent};
-use hyper::Client;
-
-use crate::search_providers::SearchProvider;
-use crate::torrent::Torrent;
 
 pub struct KickassSearch {
-    connection: hyper::Client,
+    connection: Client<HttpsConnector<hyper::client::HttpConnector>>,
 }
 
 impl KickassSearch {
     pub fn new() -> KickassSearch {
-        let tls = NativeTlsClient::new().unwrap();
-        KickassSearch {
-            connection: Client::with_connector(HttpsConnector::new(tls)),
-        }
+        let https = HttpsConnector::new().unwrap();
+        let client = hyper::Client::builder().build::<_, hyper::Body>(https);
+        KickassSearch { connection: client }
     }
 }
 
+#[async_trait]
 impl SearchProvider for KickassSearch {
-    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error>> {
+    async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on Kickass");
-        let mut res = self
+        let url = format!("https://katcr.co/katsearch/page/1/{}", term);
+        let res = self
             .connection
-            .get(&format!("https://katcr.co/katsearch/page/1/{}", term))
-            .header(Connection::close())
-            .header(UserAgent(
-                "Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0".into(),
-            ))
-            .send()?;
+            .get(url.parse().unwrap())
+            //.header(Connection::close())
+            //.header(UserAgent(
+            //    "Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0".into(),
+            //))
+            .await?;
+        info!("Status: {}", res.status());
 
-        let mut body = String::new();
-        res.read_to_string(&mut body)?;
+        let mut body = res.into_body();
+        let mut bytes = Vec::new();
+        while let Some(next) = body.next().await {
+            let chunk = next?;
+            bytes.extend(chunk);
+        }
+
+        let body = String::from_utf8(bytes)?;
 
         let document = Document::from(&*body);
         Ok(parse_kickass(&document))
@@ -105,7 +105,7 @@ fn parse_kickass(document: &Document) -> Vec<Torrent> {
 #[cfg(test)]
 mod test {
     use select::document::Document;
-    static TEST_DATA: &'static str = include_str!("test_data/kickass.html");
+    static TEST_DATA: &str = include_str!("test_data/kickass.html");
 
     #[test]
     fn test_parse_kickass() {

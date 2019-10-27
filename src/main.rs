@@ -1,16 +1,15 @@
-use docopt;
+mod search_providers;
+use search_providers::kickass_search::KickassSearch;
+use search_providers::pirate_bay_search::PirateBaySearch;
+use search_providers::SearchProvider;
 
 mod torrent;
-use crate::torrent::Torrent;
+use torrent::Torrent;
 
-mod search_providers;
-use crate::search_providers::kickass_search::KickassSearch;
-use crate::search_providers::pirate_bay_search::PirateBaySearch;
-use crate::search_providers::SearchProvider;
 use log::error;
 use serde::Deserialize;
 
-static USAGE: &'static str = "
+static USAGE: &str = "
 Usage:
   torrent-search [options] <searchterm>...
   torrent-search (-h | --help)
@@ -32,7 +31,8 @@ struct Args {
     flag_sort: Option<SortMethods>,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
     // parse arguments
     let args: Args = docopt::Docopt::new(USAGE)
@@ -51,7 +51,8 @@ fn main() {
     // search for torrents
     let mut torrents = vec![];
     for provider in providers.iter() {
-        match provider.search(&keyword) {
+        let result = provider.search(&keyword).await;
+        match result {
             Ok(results) => torrents.extend(results),
             Err(err) => error!("[{}] Error: {}", provider.get_name(), err),
         }
@@ -68,4 +69,5 @@ fn main() {
     for torrent in torrents.iter() {
         torrent.print();
     }
+    Ok(())
 }

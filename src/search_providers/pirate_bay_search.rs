@@ -1,48 +1,48 @@
-use hyper;
-use hyper_native_tls;
-use select;
-
-use self::select::document::Document;
-use self::select::node::Node;
-use self::select::predicate::{Attr, Class, Name};
-
-use std::error::Error;
-use std::io::Read;
-
-use log::{error, info};
-
-use self::hyper::header::Connection;
-use self::hyper::net::HttpsConnector;
-use self::hyper::Client;
-use self::hyper_native_tls::NativeTlsClient;
-
 use crate::search_providers::SearchProvider;
 use crate::torrent::Torrent;
 
+use async_trait::async_trait;
+use hyper::Client;
+use hyper_tls::HttpsConnector;
+use log::{error, info};
+use select::document::Document;
+use select::node::Node;
+use select::predicate::{Attr, Class, Name};
+
+use std::error::Error;
+
 pub struct PirateBaySearch {
-    connection: Client,
+    connection: Client<HttpsConnector<hyper::client::HttpConnector>>,
 }
 
 impl PirateBaySearch {
     pub fn new() -> PirateBaySearch {
-        let tls = NativeTlsClient::new().unwrap();
-        PirateBaySearch {
-            connection: Client::with_connector(HttpsConnector::new(tls)),
-        }
+        let https = HttpsConnector::new().unwrap();
+        let client = hyper::Client::builder().build::<_, hyper::Body>(https);
+        PirateBaySearch { connection: client }
     }
 }
 
+#[async_trait]
 impl SearchProvider for PirateBaySearch {
-    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error>> {
+    async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on PirateBay");
-        let mut res = self
+        let url = format!("https://thepiratebay.org/search/{}/0/99/0", term);
+        let res = self
             .connection
-            .get(&format!("https://thepiratebay.org/search/{}/0/99/0", term))
-            .header(Connection::close())
-            .send()?;
+            .get(url.parse().unwrap())
+            //.header(Connection::close())
+            .await?;
 
-        let mut body = String::new();
-        res.read_to_string(&mut body)?;
+        info!("Status: {}", res.status());
+        let mut body = res.into_body();
+        let mut bytes = Vec::new();
+        while let Some(next) = body.next().await {
+            let chunk = next?;
+            bytes.extend(chunk);
+        }
+
+        let body = String::from_utf8(bytes)?;
 
         let document = Document::from(&*body);
         Ok(parse_piratebay(&document))
@@ -98,8 +98,8 @@ fn parse_piratebay(document: &Document) -> Vec<Torrent> {
 
 #[cfg(test)]
 mod test {
-    use super::select::document::Document;
-    static TEST_DATA: &'static str = include_str!("test_data/piratebay.html");
+    use select::document::Document;
+    static TEST_DATA: &str = include_str!("test_data/piratebay.html");
 
     #[test]
     fn test_parse_piratebay() {
