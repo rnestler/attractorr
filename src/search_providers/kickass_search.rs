@@ -33,7 +33,7 @@ impl KickassSearch {
 }
 
 impl SearchProvider for KickassSearch {
-    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<Error>> {
+    fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error>> {
         info!("Searching on Kickass");
         let mut res = self
             .connection
