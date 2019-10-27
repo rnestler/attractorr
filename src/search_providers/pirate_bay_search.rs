@@ -16,8 +16,8 @@ use self::hyper::net::HttpsConnector;
 use self::hyper::Client;
 use self::hyper_native_tls::NativeTlsClient;
 
-use search_providers::SearchProvider;
-use torrent::Torrent;
+use crate::search_providers::SearchProvider;
+use crate::torrent::Torrent;
 
 pub struct PirateBaySearch {
     connection: Client,

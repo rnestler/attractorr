@@ -16,8 +16,8 @@ use self::hyper_native_tls::NativeTlsClient;
 use hyper::header::{Connection, UserAgent};
 use hyper::Client;
 
-use search_providers::SearchProvider;
-use torrent::Torrent;
+use crate::search_providers::SearchProvider;
+use crate::torrent::Torrent;
 
 pub struct KickassSearch {
     connection: hyper::Client,
