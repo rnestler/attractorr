@@ -1,6 +1,6 @@
-extern crate hyper;
-extern crate hyper_native_tls;
-extern crate select;
+use hyper;
+use hyper_native_tls;
+use select;
 
 use self::select::document::Document;
 use self::select::node::Node;
@@ -16,8 +16,8 @@ use self::hyper::net::HttpsConnector;
 use self::hyper::Client;
 use self::hyper_native_tls::NativeTlsClient;
 
-use search_providers::SearchProvider;
-use torrent::Torrent;
+use crate::search_providers::SearchProvider;
+use crate::torrent::Torrent;
 
 pub struct PirateBaySearch {
     connection: Client,
@@ -42,7 +42,7 @@ impl SearchProvider for PirateBaySearch {
             .send()?;
 
         let mut body = String::new();
-        try!(res.read_to_string(&mut body));
+        res.read_to_string(&mut body)?;
 
         let document = Document::from(&*body);
         Ok(parse_piratebay(&document))
@@ -53,26 +53,26 @@ impl SearchProvider for PirateBaySearch {
     }
 }
 
-fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
-    let name = try!(row
+fn parse_piratebay_entry(row: &Node<'_>) -> Result<Torrent, String> {
+    let name = row
         .find(Class("detLink"))
         .nth(0)
         .ok_or_else(|| "Could not find 'detLink'".to_owned())
-        .and_then(|n| Ok(n.text())));
+        .and_then(|n| Ok(n.text()))?;
 
-    let link = try!(row
+    let link = row
         .find(Attr("title", "Download this torrent using magnet"))
         .nth(0)
-        .ok_or_else(|| "Could not find magnet link".to_owned()));
+        .ok_or_else(|| "Could not find magnet link".to_owned())?;
     // table data is |Type|Name|Seeders|Leechers|
     let tds = row.find(Name("td"));
     let mut tds = tds.skip(2);
     let seeders = tds.next().and_then(|v| v.text().parse::<u32>().ok());
     let leechers = tds.next().and_then(|v| v.text().parse::<u32>().ok());
 
-    let magnet_link = try!(link
+    let magnet_link = link
         .attr("href")
-        .ok_or_else(|| "Could not find href element".to_owned()));
+        .ok_or_else(|| "Could not find href element".to_owned())?;
 
     Ok(Torrent {
         name,

@@ -1,17 +1,13 @@
-extern crate docopt;
-extern crate hyper;
-extern crate log;
-extern crate select;
-extern crate serde;
+use docopt;
 
 mod torrent;
-use torrent::Torrent;
+use crate::torrent::Torrent;
 
 mod search_providers;
+use crate::search_providers::kickass_search::KickassSearch;
+use crate::search_providers::pirate_bay_search::PirateBaySearch;
+use crate::search_providers::SearchProvider;
 use log::error;
-use search_providers::kickass_search::KickassSearch;
-use search_providers::pirate_bay_search::PirateBaySearch;
-use search_providers::SearchProvider;
 use serde::Deserialize;
 
 static USAGE: &'static str = "

@@ -2,6 +2,7 @@
 name = "torrent-search"
 version = "0.1.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
+edition = "2018"
 [dependencies]
 select = "^0.4"
 hyper = "^0.10"

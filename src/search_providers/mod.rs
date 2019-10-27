@@ -1,5 +1,5 @@
+use crate::torrent::Torrent;
 use std::error::Error;
-use torrent::Torrent;
 
 pub mod kickass_search;
 pub mod pirate_bay_search;
