@@ -1,6 +1,6 @@
-extern crate hyper;
-extern crate hyper_native_tls;
-extern crate select;
+use hyper;
+use hyper_native_tls;
+use select;
 
 use select::document::Document;
 use select::node::Node;
@@ -56,7 +56,7 @@ impl SearchProvider for KickassSearch {
     }
 }
 
-fn parse_kickass_entry(row: &Node) -> Result<Torrent, String> {
+fn parse_kickass_entry(row: &Node<'_>) -> Result<Torrent, String> {
     let name = row
         .find(Class("torrents_table__torrent_title"))
         .nth(0)

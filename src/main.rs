@@ -1,8 +1,4 @@
-extern crate docopt;
-extern crate hyper;
-extern crate log;
-extern crate select;
-extern crate serde;
+use docopt;
 
 mod torrent;
 use crate::torrent::Torrent;

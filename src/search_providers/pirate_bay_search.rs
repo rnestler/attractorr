@@ -1,6 +1,6 @@
-extern crate hyper;
-extern crate hyper_native_tls;
-extern crate select;
+use hyper;
+use hyper_native_tls;
+use select;
 
 use self::select::document::Document;
 use self::select::node::Node;
@@ -53,7 +53,7 @@ impl SearchProvider for PirateBaySearch {
     }
 }
 
-fn parse_piratebay_entry(row: &Node) -> Result<Torrent, String> {
+fn parse_piratebay_entry(row: &Node<'_>) -> Result<Torrent, String> {
     let name = row
         .find(Class("detLink"))
         .nth(0)
