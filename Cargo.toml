@@ -14,3 +14,4 @@ env_logger = "^0.7"
 log = "^0.4"
 async-trait = "^0.1.17"
 tokio = { version = "=0.2.0-alpha.6" }
+percent-encoding = "^2.1.0"

@@ -7,6 +7,7 @@ mod torrent;
 use torrent::Torrent;
 
 use log::error;
+use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use serde::Deserialize;
 
 static USAGE: &str = "
@@ -39,7 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .and_then(|d| d.deserialize())
         .unwrap_or_else(|e| e.exit());
 
-    let keyword = &args.arg_searchterm.join(" ");
+    let keyword = utf8_percent_encode(&args.arg_searchterm.join(" "), NON_ALPHANUMERIC).to_string();
     let sort_method = args.flag_sort;
 
     // create all search providers
