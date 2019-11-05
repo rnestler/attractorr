@@ -6,6 +6,7 @@ use search_providers::SearchProvider;
 mod torrent;
 use torrent::Torrent;
 
+use futures_util::future::join_all;
 use log::error;
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use serde::Deserialize;
@@ -48,14 +49,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Box::new(PirateBaySearch::new()),
         Box::new(KickassSearch::new()),
     ];
-
     // search for torrents
+    let providers = providers.iter().map(|provider| provider.search(&keyword));
+    let results = join_all(providers).await;
+
+    // collect torrents into one vec
     let mut torrents = vec![];
-    for provider in providers.iter() {
-        let result = provider.search(&keyword).await;
+    for result in results {
         match result {
-            Ok(results) => torrents.extend(results),
-            Err(err) => error!("[{}] Error: {}", provider.get_name(), err),
+            Ok(t) => torrents.extend(t),
+            Err(err) => error!("Error: {}", err),
         }
     }
 
