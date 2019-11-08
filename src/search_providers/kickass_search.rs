@@ -2,7 +2,7 @@ use crate::search_providers::SearchProvider;
 use crate::torrent::Torrent;
 
 use async_trait::async_trait;
-use hyper::Client;
+use hyper::{Body, Client, Request};
 use hyper_tls::HttpsConnector;
 use log::{error, info};
 use select::document::Document;
@@ -28,14 +28,11 @@ impl SearchProvider for KickassSearch {
     async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on Kickass");
         let url = format!("https://katcr.co/katsearch/page/1/{}", term);
-        let res = self
-            .connection
-            .get(url.parse().unwrap())
-            //.header(Connection::close())
-            //.header(UserAgent(
-            //    "Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0".into(),
-            //))
-            .await?;
+        let request = Request::get(url)
+            .header(hyper::header::USER_AGENT, super::USER_AGENT)
+            .body(Body::empty())
+            .expect("Request builder");
+        let res = self.connection.request(request).await?;
         info!("Status: {}", res.status());
 
         let mut body = res.into_body();
