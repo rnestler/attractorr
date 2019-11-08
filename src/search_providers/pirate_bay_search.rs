@@ -28,11 +28,7 @@ impl SearchProvider for PirateBaySearch {
     async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on PirateBay");
         let url = format!("https://thepiratebay.org/search/{}/0/99/0", term);
-        let res = self
-            .connection
-            .get(url.parse().unwrap())
-            //.header(Connection::close())
-            .await?;
+        let res = self.connection.get(url.parse().unwrap()).await?;
 
         info!("Status: {}", res.status());
         let mut body = res.into_body();
