@@ -35,7 +35,10 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    env_logger::init();
+    env_logger::Builder::from_default_env()
+        .format_timestamp_millis()
+        .init();
+
     // parse arguments
     let args: Args = docopt::Docopt::new(USAGE)
         .and_then(|d| d.deserialize())
