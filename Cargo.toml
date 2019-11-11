@@ -5,10 +5,14 @@ authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 edition = "2018"
 [dependencies]
 select = "^0.4"
-hyper = "^0.10"
-hyper-native-tls = "^0.3"
+hyper = "0.13.0-alpha.4"
+hyper-tls = "0.4.0-alpha.4"
 docopt = "^1.1"
 ansi_term = "^0.12"
 serde = { version = "1", features = ["derive"] }
 env_logger = "^0.7"
 log = "^0.4"
+async-trait = "^0.1.17"
+tokio = { version = "=0.2.0-alpha.6" }
+percent-encoding = "^2.1.0"
+futures-util-preview = "0.3.0-alpha.19"

@@ -1,16 +1,17 @@
-use docopt;
+mod search_providers;
+use search_providers::kickass_search::KickassSearch;
+use search_providers::pirate_bay_search::PirateBaySearch;
+use search_providers::SearchProvider;
 
 mod torrent;
-use crate::torrent::Torrent;
+use torrent::Torrent;
 
-mod search_providers;
-use crate::search_providers::kickass_search::KickassSearch;
-use crate::search_providers::pirate_bay_search::PirateBaySearch;
-use crate::search_providers::SearchProvider;
+use futures_util::future::join_all;
 use log::error;
+use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use serde::Deserialize;
 
-static USAGE: &'static str = "
+static USAGE: &str = "
 Usage:
   torrent-search [options] <searchterm>...
   torrent-search (-h | --help)
@@ -32,14 +33,15 @@ struct Args {
     flag_sort: Option<SortMethods>,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
     // parse arguments
     let args: Args = docopt::Docopt::new(USAGE)
         .and_then(|d| d.deserialize())
         .unwrap_or_else(|e| e.exit());
 
-    let keyword = &args.arg_searchterm.join(" ");
+    let keyword = utf8_percent_encode(&args.arg_searchterm.join(" "), NON_ALPHANUMERIC).to_string();
     let sort_method = args.flag_sort;
 
     // create all search providers
@@ -47,13 +49,16 @@ fn main() {
         Box::new(PirateBaySearch::new()),
         Box::new(KickassSearch::new()),
     ];
-
     // search for torrents
+    let providers = providers.iter().map(|provider| provider.search(&keyword));
+    let results = join_all(providers).await;
+
+    // collect torrents into one vec
     let mut torrents = vec![];
-    for provider in providers.iter() {
-        match provider.search(&keyword) {
-            Ok(results) => torrents.extend(results),
-            Err(err) => error!("[{}] Error: {}", provider.get_name(), err),
+    for result in results {
+        match result {
+            Ok(t) => torrents.extend(t),
+            Err(err) => error!("Error: {}", err),
         }
     }
 
@@ -68,4 +73,5 @@ fn main() {
     for torrent in torrents.iter() {
         torrent.print();
     }
+    Ok(())
 }
