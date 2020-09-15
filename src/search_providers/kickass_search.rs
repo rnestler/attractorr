@@ -8,6 +8,7 @@ use log::{error, info};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Attr, Class, Name};
+use tokio::stream::StreamExt;
 
 use std::error::Error;
 
@@ -17,7 +18,7 @@ pub struct KickassSearch {
 
 impl KickassSearch {
     pub fn new() -> KickassSearch {
-        let https = HttpsConnector::new().unwrap();
+        let https = HttpsConnector::new();
         let client = hyper::Client::builder().build::<_, hyper::Body>(https);
         KickassSearch { connection: client }
     }

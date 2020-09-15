@@ -4,9 +4,9 @@ version = "0.1.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 edition = "2018"
 [dependencies]
-select = "^0.4"
-hyper = "0.13.0-alpha.4"
-hyper-tls = "0.4.0-alpha.4"
+select = "^0.5"
+hyper = "0.13.7"
+hyper-tls = "0.4.3"
 docopt = "^1.1"
 ansi_term = "^0.12"
 serde = { version = "1", features = ["derive"] }
@@ -14,7 +14,7 @@ serde_json = "1.0"
 env_logger = "^0.7"
 log = "^0.4"
 async-trait = "^0.1.17"
-tokio = { version = "=0.2.0-alpha.6" }
+tokio = { version = "0.2.22", features = ["macros"] }
 percent-encoding = "^2.1.0"
 futures-util-preview = "0.3.0-alpha.19"
 bytes = "0.5"
