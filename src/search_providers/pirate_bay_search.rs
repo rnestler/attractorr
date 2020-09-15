@@ -6,6 +6,7 @@ use hyper::Client;
 use hyper_tls::HttpsConnector;
 use log::info;
 use serde::Deserialize;
+use tokio::stream::StreamExt;
 
 use std::error::Error;
 
@@ -31,7 +32,7 @@ pub struct PirateBaySearch {
 
 impl PirateBaySearch {
     pub fn new() -> PirateBaySearch {
-        let https = HttpsConnector::new().unwrap();
+        let https = HttpsConnector::new();
         let client = hyper::Client::builder().build::<_, hyper::Body>(https);
         PirateBaySearch { connection: client }
     }
