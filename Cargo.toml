@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 edition = "2018"
 [dependencies]
-select = "^0.4"
+select = "^0.5"
 hyper = "0.13.7"
 hyper-tls = "0.4.3"
 docopt = "^1.1"
