@@ -2,7 +2,7 @@ mod search_providers;
 use search_providers::kickass_search::KickassSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
-use torrent_search::search_l337x;
+use torrent_search::{search_l337x};
 use ansi_term::Colour::{Green, Red};
 
 mod torrent;
@@ -85,8 +85,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Tried to make the 1337x stuff look like the others
     for result in results_l337x {
-        println!("{}/{} - {}", Red.paint("S:?"), Green.paint("L:?"), result.name);
-        println!("{}\n", &result.magnet.unwrap_or("Error".to_string())[0..60]);
+        let seed_info = match result.seeders {
+            Ok(s) => s.to_string(),
+            Err(TorrentSearch) => "?".to_string(),
+        };
+
+        let leech_info = match result.leeches {
+            Ok(s) => s.to_string(),
+            Err(_e) => "?".to_string(),
+        };
+
+        let magnet_info = match &result.magnet {
+            Ok(m) => &m[0..60],
+            Err(_e) => "Error getting magnet url",
+        };
+
+        println!("{}/{} - {}", Red.paint(format!("S:{}", seed_info)), Green.paint(format!("L:{}", leech_info)), result.name);
+        println!("{}\n", magnet_info);
+
     }
 
     Ok(())
