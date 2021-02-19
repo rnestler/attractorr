@@ -87,7 +87,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for result in results_l337x {
         let seed_info = match result.seeders {
             Ok(s) => s.to_string(),
-            Err(TorrentSearch) => "?".to_string(),
+            Err(_e) => "?".to_string(),
         };
 
         let leech_info = match result.leeches {
