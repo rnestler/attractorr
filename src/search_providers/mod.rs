@@ -4,7 +4,7 @@ use std::error::Error;
 
 pub mod kickass_search;
 pub mod pirate_bay_search;
-mod l337x_search;
+pub mod l337x_search;
 
 const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
