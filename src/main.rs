@@ -1,8 +1,8 @@
 mod search_providers;
 use search_providers::kickass_search::KickassSearch;
+use search_providers::l337x_search::L337xSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
-use torrent_search::{search_l337x};
 use ansi_term::Colour::{Green, Red};
 
 mod torrent;
@@ -53,13 +53,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let providers: Vec<Box<dyn SearchProvider>> = vec![
         Box::new(PirateBaySearch::new()),
         Box::new(KickassSearch::new()),
+        Box::new(L337xSearch::new()),
     ];
 
     // search for torrents
     let providers = providers.iter().map(|provider| provider.search(&keyword));
     let results = join_all(providers).await;
-    //torrent_search crate works a little bit different
-    let results_l337x = search_l337x(keyword).unwrap_or(Vec::new());
 
     // collect torrents into one vec
     let mut torrents = vec![];
@@ -80,28 +79,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // print out all torrents
     for torrent in torrents.iter() {
         torrent.print();
-
-    }
-
-    // Tried to make the 1337x stuff look like the others
-    for result in results_l337x {
-        let seed_info = match result.seeders {
-            Ok(s) => s.to_string(),
-            Err(_e) => "?".to_string(),
-        };
-
-        let leech_info = match result.leeches {
-            Ok(s) => s.to_string(),
-            Err(_e) => "?".to_string(),
-        };
-
-        let magnet_info = match &result.magnet {
-            Ok(m) => &m[0..60],
-            Err(_e) => "Error getting magnet url",
-        };
-
-        println!("{}/{} - {}", Red.paint(format!("S:{}", seed_info)), Green.paint(format!("L:{}", leech_info)), result.name);
-        println!("{}\n", magnet_info);
 
     }
 
