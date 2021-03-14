@@ -2,11 +2,10 @@ use crate::search_providers::SearchProvider;
 use crate::torrent::Torrent;
 
 use async_trait::async_trait;
-use hyper::Client;
+use hyper::{body::HttpBody, Client};
 use hyper_tls::HttpsConnector;
 use log::info;
 use serde::Deserialize;
-use tokio::stream::StreamExt;
 
 use std::error::Error;
 
@@ -43,12 +42,11 @@ impl SearchProvider for PirateBaySearch {
     async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on PirateBay");
         let url = format!("https://apibay.org/q.php?q={}", term);
-        let res = self.connection.get(url.parse().unwrap()).await?;
+        let mut res = self.connection.get(url.parse().unwrap()).await?;
 
         info!("Status: {}", res.status());
-        let mut body = res.into_body();
         let mut bytes = Vec::new();
-        while let Some(next) = body.next().await {
+        while let Some(next) = res.data().await {
             let chunk = next?;
             bytes.extend(chunk);
         }

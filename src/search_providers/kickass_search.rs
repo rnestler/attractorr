@@ -2,13 +2,12 @@ use crate::search_providers::SearchProvider;
 use crate::torrent::Torrent;
 
 use async_trait::async_trait;
-use hyper::{Body, Client, Request};
+use hyper::{body::HttpBody, Body, Client, Request};
 use hyper_tls::HttpsConnector;
 use log::{error, info};
 use select::document::Document;
 use select::node::Node;
 use select::predicate::{Attr, Class, Name};
-use tokio::stream::StreamExt;
 
 use std::error::Error;
 
@@ -33,12 +32,11 @@ impl SearchProvider for KickassSearch {
             .header(hyper::header::USER_AGENT, super::USER_AGENT)
             .body(Body::empty())
             .expect("Request builder");
-        let res = self.connection.request(request).await?;
+        let mut res = self.connection.request(request).await?;
         info!("Status: {}", res.status());
 
-        let mut body = res.into_body();
         let mut bytes = Vec::new();
-        while let Some(next) = body.next().await {
+        while let Some(next) = res.data().await {
             let chunk = next?;
             bytes.extend(chunk);
         }
