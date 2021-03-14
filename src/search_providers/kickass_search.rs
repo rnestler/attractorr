@@ -55,13 +55,13 @@ impl SearchProvider for KickassSearch {
 fn parse_kickass_entry(row: &Node<'_>) -> Result<Torrent, String> {
     let name = row
         .find(Class("torrents_table__torrent_title"))
-        .nth(0)
+        .next()
         .ok_or_else(|| "Could not find 'torrents_table__torrent_title'".to_owned())
-        .and_then(|n| Ok(n.text()))?;
+        .map(|n| n.text())?;
 
     let link = row
         .find(Attr("title", "Torrent magnet link"))
-        .nth(0)
+        .next()
         .ok_or_else(|| "Could not find magnet link".to_owned())?;
 
     let magnet_link = link
