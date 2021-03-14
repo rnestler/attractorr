@@ -1,6 +1,4 @@
-use ansi_term;
-
-use self::ansi_term::Colour::{Green, Red};
+use ansi_term::Colour::{Green, Red};
 use std::cmp::Ordering;
 
 #[derive(Debug)]
