@@ -18,4 +18,4 @@ async-trait = "^0.1.17"
 tokio = { version = "0.2.22", features = ["macros"] }
 percent-encoding = "^2.1.0"
 futures-util-preview = "0.3.0-alpha.19"
-bytes = "0.5"
+bytes = "1.0.1"

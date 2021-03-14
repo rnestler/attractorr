@@ -1092,7 +1092,7 @@ version = "0.1.0"
 dependencies = [
  "ansi_term",
  "async-trait",
- "bytes 0.5.6",
+ "bytes 1.0.1",
  "docopt",
  "env_logger",
  "futures-util-preview",
