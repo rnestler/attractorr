@@ -40,6 +40,15 @@ $ cargo run -- "search term"
 
 To search for "search term" in all supported sources.
 
+## Alternatives
+
+Here is a list of projects which do similar things:
+
+ * https://crates.io/crates/tpb
+ * https://crates.io/crates/torrentfind/
+ * https://crates.io/crates/nyaadesu
+ * https://crates.io/crates/ktorrent
+
 ## License
 
 Licensed under either of
