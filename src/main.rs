@@ -3,7 +3,6 @@ use search_providers::kickass_search::KickassSearch;
 use search_providers::l337x_search::L337xSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
-use ansi_term::Colour::{Green, Red};
 
 mod torrent;
 use torrent::Torrent;
@@ -79,7 +78,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // print out all torrents
     for torrent in torrents.iter() {
         torrent.print();
-
     }
 
     Ok(())
