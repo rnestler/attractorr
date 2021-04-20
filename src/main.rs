@@ -56,15 +56,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     ];
 
     // search for torrents
-    let providers = providers.iter().map(|provider| provider.search(&keyword));
-    let results = join_all(providers).await;
+    let results = providers.iter().map(|provider| provider.search(&keyword));
+    let results = join_all(results).await;
 
     // collect torrents into one vec
     let mut torrents = vec![];
-    for result in results {
+    for (result, provider) in results.into_iter().zip(providers) {
         match result {
             Ok(t) => torrents.extend(t),
-            Err(err) => error!("Error: {}", err),
+            Err(err) => error!("{} error: {}", provider.get_name(), err),
         }
     }
 
