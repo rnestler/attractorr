@@ -1,5 +1,6 @@
 mod search_providers;
 use search_providers::kickass_search::KickassSearch;
+use search_providers::l337x_search::L337xSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
 
@@ -51,7 +52,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let providers: Vec<Box<dyn SearchProvider>> = vec![
         Box::new(PirateBaySearch::new()),
         Box::new(KickassSearch::new()),
+        Box::new(L337xSearch::new()),
     ];
+
     // search for torrents
     let providers = providers.iter().map(|provider| provider.search(&keyword));
     let results = join_all(providers).await;
@@ -76,5 +79,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for torrent in torrents.iter() {
         torrent.print();
     }
+
     Ok(())
 }
