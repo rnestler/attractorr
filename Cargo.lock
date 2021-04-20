@@ -220,12 +220,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "098cd1c6dda6ca01650f1a37a794245eb73181d0d4d4e955e2f3c37db7af1815"
 
 [[package]]
-name = "futures-core-preview"
-version = "0.3.0-alpha.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b35b6263fb1ef523c3056565fa67b1d16f0a8604ff12b11b08c25f28a734c60a"
-
-[[package]]
 name = "futures-executor"
 version = "0.3.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -283,17 +277,6 @@ dependencies = [
  "pin-utils",
  "proc-macro-hack",
  "proc-macro-nested",
- "slab",
-]
-
-[[package]]
-name = "futures-util-preview"
-version = "0.3.0-alpha.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ce968633c17e5f97936bd2797b6e38fb56cf16a7422319f7ec2e30d3c470e8d"
-dependencies = [
- "futures-core-preview",
- "pin-utils",
  "slab",
 ]
 
@@ -1221,7 +1204,7 @@ dependencies = [
  "bytes",
  "docopt",
  "env_logger",
- "futures-util-preview",
+ "futures-util",
  "hyper",
  "hyper-tls",
  "log",
