@@ -20,7 +20,7 @@ impl L337xSearch {
 impl SearchProvider for L337xSearch {
     async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on L337X");
-        let res = search_l337x(term.to_string()).await.unwrap_or_default();
+        let res = search_l337x(term.to_string()).await?;
 
         Ok(parse_l337x(res))
     }
