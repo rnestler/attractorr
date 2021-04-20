@@ -5,7 +5,7 @@ use async_trait::async_trait;
 use log::info;
 use std::convert::TryInto;
 use std::error::Error;
-use torrent_search::*;
+use torrent_search::{search_l337x, TorrentSearchResult};
 
 //The struct field is needed for compatibility
 pub struct L337xSearch {}
@@ -21,7 +21,6 @@ impl SearchProvider for L337xSearch {
     async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on L337X");
         let res = search_l337x(term.to_string()).await.unwrap_or_default();
-        //info!("Status: {}", res.status());
 
         Ok(parse_l337x(res))
     }
@@ -54,16 +53,22 @@ fn parse_l337x(results: Vec<TorrentSearchResult>) -> Vec<Torrent> {
 
 #[cfg(test)]
 mod test {
-    use torrent_search::search_l337x;
+    use super::*;
 
     #[tokio::test]
     async fn test_parse_l337x() {
-        let torrents = search_l337x("Debian".to_string()).await.unwrap_or_default();
+        let torrents = vec![TorrentSearchResult {
+            name: "test".into(),
+            seeders: Ok(1),
+            leeches: Ok(2),
+            magnet: Ok("magnet:?".into()),
+        }];
+        let torrents = parse_l337x(torrents);
 
-        for torrent in torrents.iter() {
-            assert!(&torrent.magnet.as_ref().unwrap().starts_with("magnet:?"));
-            assert!(torrent.seeders.is_ok());
-            assert!(torrent.leeches.is_ok());
-        }
+        assert_eq!(1, torrents.len());
+        assert_eq!(torrents[0].name, "test");
+        assert_eq!(torrents[0].magnet_link, "magnet:?");
+        assert_eq!(torrents[0].seeders, Some(1));
+        assert_eq!(torrents[0].leechers, Some(2));
     }
 }
