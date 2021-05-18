@@ -35,7 +35,7 @@ To install openssl on Windows see [here](https://github.com/sfackler/rust-openss
 Just execute
 
 ```
-$ cargo run -- "search term"
+$ cargo run "search term"
 ```
 
 To search for "search term" in all supported sources.
