@@ -2,7 +2,6 @@ use crate::torrent::Torrent;
 use async_trait::async_trait;
 use std::error::Error;
 
-pub mod kickass_search;
 pub mod l337x_search;
 pub mod pirate_bay_search;
 

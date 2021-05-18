@@ -1,5 +1,4 @@
 mod search_providers;
-use search_providers::kickass_search::KickassSearch;
 use search_providers::l337x_search::L337xSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::SearchProvider;
@@ -51,7 +50,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // create all search providers
     let providers: Vec<Box<dyn SearchProvider>> = vec![
         Box::new(PirateBaySearch::new()),
-        Box::new(KickassSearch::new()),
         Box::new(L337xSearch::new()),
     ];
 
