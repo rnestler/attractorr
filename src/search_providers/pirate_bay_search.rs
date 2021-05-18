@@ -2,7 +2,7 @@ use crate::search_providers::SearchProvider;
 use crate::torrent::Torrent;
 
 use async_trait::async_trait;
-use hyper::{body::HttpBody, Client};
+use hyper::{body::HttpBody, Body, Client, Request};
 use hyper_tls::HttpsConnector;
 use log::info;
 use serde::Deserialize;
@@ -42,7 +42,13 @@ impl SearchProvider for PirateBaySearch {
     async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on PirateBay");
         let url = format!("https://apibay.org/q.php?q={}", term);
-        let mut res = self.connection.get(url.parse().unwrap()).await?;
+
+        let request = Request::get(url)
+            .header(hyper::header::USER_AGENT, super::USER_AGENT)
+            .body(Body::empty())
+            .expect("Request builder");
+
+        let mut res = self.connection.request(request).await?;
 
         info!("Status: {}", res.status());
         let mut bytes = Vec::new();
