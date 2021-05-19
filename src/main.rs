@@ -1,6 +1,7 @@
 mod search_providers;
 use search_providers::l337x_search::L337xSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
+use search_providers::yts_search::YtsSearch;
 use search_providers::SearchProvider;
 
 mod torrent;
@@ -51,6 +52,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let providers: Vec<Box<dyn SearchProvider>> = vec![
         Box::new(PirateBaySearch::new()),
         Box::new(L337xSearch::new()),
+        Box::new(YtsSearch::new()),
     ];
 
     // search for torrents
