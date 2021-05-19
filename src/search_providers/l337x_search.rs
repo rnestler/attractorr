@@ -2,8 +2,7 @@ use crate::torrent::Torrent;
 use crate::SearchProvider;
 
 use async_trait::async_trait;
-use log::info;
-use std::convert::TryInto;
+use log::{info, warn};
 use std::error::Error;
 use torrent_search::{search_l337x, TorrentSearchResult};
 
@@ -30,21 +29,21 @@ impl SearchProvider for L337xSearch {
     }
 }
 
-fn parse_l337x(results: Vec<TorrentSearchResult>) -> Vec<Torrent> {
+fn parse_l337x(mut results: Vec<TorrentSearchResult>) -> Vec<Torrent> {
     let mut results_output: Vec<Torrent> = Vec::new();
 
-    for result in results.iter() {
+    for result in results.drain(..) {
         results_output.push(Torrent {
             name: result.name.clone(),
             magnet_link: result.magnet.as_ref().unwrap().to_string(),
-            seeders: match result.seeders {
-                Ok(s) => Some(s.try_into().unwrap()),
-                _ => None,
-            },
-            leechers: match result.leeches {
-                Ok(l) => Some(l.try_into().unwrap()),
-                _ => None,
-            },
+            seeders: result
+                .seeders
+                .map_err(|e| warn!("Getting seeders failed: {}", e))
+                .ok(),
+            leechers: result
+                .leeches
+                .map_err(|e| warn!("Getting leechers failed: {}", e))
+                .ok(),
         });
     }
 
