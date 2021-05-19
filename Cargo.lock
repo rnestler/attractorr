@@ -1434,9 +1434,9 @@ dependencies = [
 
 [[package]]
 name = "yts-api"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9b9592def94bc54758dcac0e977e4735607764165c10cb66bff493cc8ca63cc"
+checksum = "03ea57eb9d3c6a6a13d2b706101b84ddafb199381d4b49ed1d47b20631beac8b"
 dependencies = [
  "hyper",
  "hyper-tls",
