@@ -1179,6 +1179,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "torrent_search",
+ "yts-api",
 ]
 
 [[package]]
@@ -1429,4 +1430,16 @@ dependencies = [
  "mac",
  "markup5ever",
  "time",
+]
+
+[[package]]
+name = "yts-api"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a9b9592def94bc54758dcac0e977e4735607764165c10cb66bff493cc8ca63cc"
+dependencies = [
+ "hyper",
+ "hyper-tls",
+ "serde",
+ "serde_json",
 ]
