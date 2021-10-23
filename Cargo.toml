@@ -2,8 +2,10 @@
 name = "torrent-search"
 version = "0.1.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
-license = "MIT OR Apache-2.0"
 edition = "2018"
+description = "A CLI tool to search various torrent directories"
+repository = "https://github.com/rnestler/rust-torrent-search/"
+license = "MIT OR Apache-2.0"
 
 [profile.release]
 codegen-units = 1
