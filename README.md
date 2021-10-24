@@ -37,6 +37,11 @@ $ cargo run "search term"
 
 To search for "search term" in all supported sources.
 
+With `--search-providers` one may limit the sources:
+```
+$ cargo run -- --sort seeders --search-providers yts,piratebay test
+```
+
 ## Alternatives
 
 Here is a list of projects which do similar things:
