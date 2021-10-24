@@ -10,29 +10,21 @@ use torrent::Torrent;
 use futures_util::future::join_all;
 use log::{debug, error};
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
+use structopt::clap::arg_enum;
 use structopt::StructOpt;
 
-#[derive(Debug, StructOpt)]
-enum SortMethods {
-    Seeders,
-    Leechers,
-}
-
-impl std::str::FromStr for SortMethods {
-    type Err = String;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "seeders" => Ok(SortMethods::Seeders),
-            "leechers" => Ok(SortMethods::Leechers),
-            sort_method => Err(format!("Invalid sort method: {}", sort_method)),
-        }
+arg_enum! {
+    #[derive(Debug)]
+    enum SortMethods {
+        Seeders,
+        Leechers,
     }
 }
 
 #[derive(Debug, StructOpt)]
 struct Args {
-    /// Sort results by the number of: seeders or leechers.
-    #[structopt(long)]
+    /// Sort results by the number of seeders or leechers.
+    #[structopt(long, possible_values = &SortMethods::variants(), case_insensitive = true)]
     sort: Option<SortMethods>,
 
     #[structopt(name = "SEARCHTERM", required = true, min_values = 1)]
