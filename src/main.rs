@@ -8,7 +8,7 @@ mod torrent;
 use torrent::Torrent;
 
 use futures_util::future::join_all;
-use log::error;
+use log::{debug, error};
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use structopt::StructOpt;
 
@@ -35,7 +35,7 @@ struct Args {
     #[structopt(long)]
     sort: Option<SortMethods>,
 
-    #[structopt(name = "SEARCHTERM")]
+    #[structopt(name = "SEARCHTERM", required = true, min_values = 1)]
     searchterm: Vec<String>,
 }
 
@@ -47,6 +47,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // parse arguments
     let args = Args::from_args();
+
+    debug!("Searchterm: {:?}", args.searchterm);
 
     let keyword = utf8_percent_encode(&args.searchterm.join(" "), NON_ALPHANUMERIC).to_string();
     let sort_method = args.sort;
