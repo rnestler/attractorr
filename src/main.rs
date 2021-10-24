@@ -2,7 +2,7 @@ mod search_providers;
 use search_providers::l337x_search::L337xSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::yts_search::YtsSearch;
-use search_providers::SearchProvider;
+use search_providers::{search_providers_from_ids, SearchProvider, SearchProviderId};
 
 mod torrent;
 use torrent::Torrent;
@@ -27,6 +27,10 @@ struct Args {
     #[structopt(long, possible_values = &SortMethods::variants(), case_insensitive = true)]
     sort: Option<SortMethods>,
 
+    /// Use the given search providers
+    #[structopt(long, multiple = false, use_delimiter = true, possible_values = &SearchProviderId::variants(), case_insensitive = true)]
+    search_providers: Vec<SearchProviderId>,
+
     #[structopt(name = "SEARCHTERM", required = true, min_values = 1)]
     searchterm: Vec<String>,
 }
@@ -46,11 +50,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let sort_method = args.sort;
 
     // create all search providers
-    let providers: Vec<Box<dyn SearchProvider>> = vec![
-        Box::new(PirateBaySearch::new()),
-        Box::new(L337xSearch::new()),
-        Box::new(YtsSearch::new()),
-    ];
+    let providers: Vec<Box<dyn SearchProvider>> = if args.search_providers.is_empty() {
+        vec![
+            Box::new(PirateBaySearch::new()),
+            Box::new(L337xSearch::new()),
+            Box::new(YtsSearch::new()),
+        ]
+    } else {
+        search_providers_from_ids(&args.search_providers)
+    };
 
     // search for torrents
     let results = providers.iter().map(|provider| provider.search(&keyword));
