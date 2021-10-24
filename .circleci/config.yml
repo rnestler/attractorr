@@ -76,7 +76,7 @@ jobs:
           command: cargo install --force cargo-audit
       - run:
           name: Run cargo-audit
-          command: cargo update && cargo audit
+          command: cargo update && cargo audit --ignore RUSTSEC-2020-0071
       - save_cache:
           key: v1-cargo-audit-cache
           paths:
