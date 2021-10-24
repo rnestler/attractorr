@@ -10,28 +10,33 @@ use torrent::Torrent;
 use futures_util::future::join_all;
 use log::error;
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
-use serde::Deserialize;
+use structopt::StructOpt;
 
-static USAGE: &str = "
-Usage:
-  torrent-search [options] <searchterm>...
-  torrent-search (-h | --help)
-
-Options:
-  -h --help             Show this screen.
-  --sort=SORTMETHOD     Sort results by the number of: seeders or leechers.
-";
-
-#[derive(Debug, Deserialize)]
+#[derive(Debug, StructOpt)]
 enum SortMethods {
     Seeders,
     Leechers,
 }
 
-#[derive(Debug, Deserialize)]
+impl std::str::FromStr for SortMethods {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "seeders" => Ok(SortMethods::Seeders),
+            "leechers" => Ok(SortMethods::Leechers),
+            sort_method => Err(format!("Invalid sort method: {}", sort_method)),
+        }
+    }
+}
+
+#[derive(Debug, StructOpt)]
 struct Args {
-    arg_searchterm: Vec<String>,
-    flag_sort: Option<SortMethods>,
+    /// Sort results by the number of: seeders or leechers.
+    #[structopt(long)]
+    sort: Option<SortMethods>,
+
+    #[structopt(name = "SEARCHTERM")]
+    searchterm: Vec<String>,
 }
 
 #[tokio::main]
@@ -41,12 +46,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .init();
 
     // parse arguments
-    let args: Args = docopt::Docopt::new(USAGE)
-        .and_then(|d| d.deserialize())
-        .unwrap_or_else(|e| e.exit());
+    let args = Args::from_args();
 
-    let keyword = utf8_percent_encode(&args.arg_searchterm.join(" "), NON_ALPHANUMERIC).to_string();
-    let sort_method = args.flag_sort;
+    let keyword = utf8_percent_encode(&args.searchterm.join(" "), NON_ALPHANUMERIC).to_string();
+    let sort_method = args.sort;
 
     // create all search providers
     let providers: Vec<Box<dyn SearchProvider>> = vec![
