@@ -6,12 +6,7 @@ This is a tool, written in Rust, to search for torrents on the command line.
 
 ## Building
 
-`rust-torrent-search` needs an external [openssl library](https://openssl.org),
-make sure to [install it](https://github.com/sfackler/rust-openssl#building).
-
-### Linux
-
-Just install openssl with your package manager:
+On Linux, make sure to have openssl installed:
 
 ```Bash
 # ArchLinux
@@ -26,9 +21,11 @@ Then just use [cargo](http://doc.crates.io/) to build
 $ cargo build
 ```
 
-### Windows
+## Install
 
-To install openssl on Windows see [here](https://github.com/sfackler/rust-openssl#windows)
+```
+cargo install --git https://github.com/rnestler/rust-torrent-search
+```
 
 ## Usage
 
