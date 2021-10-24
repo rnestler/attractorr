@@ -15,7 +15,7 @@ lto = "fat"
 select = "^0.5"
 hyper = { version = "0.14.4", features = ["full"] }
 hyper-tls = "0.5.0"
-docopt = "^1.1"
+structopt = "0.3.25"
 ansi_term = "^0.12"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1.0"
