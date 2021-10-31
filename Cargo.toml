@@ -1,6 +1,6 @@
 [package]
 name = "torrent-search"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 edition = "2018"
 description = "A CLI tool to search various torrent directories"
