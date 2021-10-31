@@ -1,4 +1,4 @@
-use ansi_term::Colour::{Green, Red};
+use ansi_term::{Color, Style};
 use std::cmp::Ordering;
 
 #[derive(Debug)]
@@ -10,13 +10,19 @@ pub struct Torrent {
 }
 
 impl Torrent {
-    pub fn print(&self) {
-        if let Some(seeders) = self.seeders {
-            print!("{}", Green.paint(format!("S:{}", seeders)));
-            if let Some(leechers) = self.leechers {
-                print!("/{}", Red.paint(format!("L:{}", leechers)));
-            }
-            print!(" - ");
+    pub fn print(&self, colorful: bool) {
+        let (seeders_style, leechers_style) = if colorful {
+            (Style::new().fg(Color::Green), Style::new().fg(Color::Red))
+        } else {
+            (Style::default(), Style::default())
+        };
+
+        if let (Some(seeders), Some(leechers)) = (self.seeders, self.leechers) {
+            print!(
+                "{}/{} - ",
+                seeders_style.paint(format!("S:{}", seeders)),
+                leechers_style.paint(format!("L:{}", leechers))
+            );
         }
         println!("{}", self.name);
         println!("{}", self.magnet_link);

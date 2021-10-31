@@ -7,6 +7,7 @@ use search_providers::{search_providers_from_ids, SearchProvider, SearchProvider
 mod torrent;
 use torrent::Torrent;
 
+use atty::Stream;
 use futures_util::future::join_all;
 use log::{debug, error};
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
@@ -21,6 +22,15 @@ arg_enum! {
     }
 }
 
+arg_enum! {
+    #[derive(Debug, Eq, PartialEq, Copy, Clone)]
+    pub enum ColorOptions {
+        Always,
+        Auto,
+        Never,
+    }
+}
+
 #[derive(Debug, StructOpt)]
 struct Args {
     /// Sort results by the number of seeders or leechers.
@@ -30,6 +40,10 @@ struct Args {
     /// Use the given search providers
     #[structopt(long, multiple = false, use_delimiter = true, possible_values = &SearchProviderId::variants(), case_insensitive = true)]
     search_providers: Vec<SearchProviderId>,
+
+    /// Control whether to use color
+    #[structopt(long, value_name = "WHEN", possible_values = &ColorOptions::variants(), case_insensitive = true, default_value="auto")]
+    color: ColorOptions,
 
     #[structopt(name = "SEARCHTERM", required = true, min_values = 1)]
     searchterm: Vec<String>,
@@ -48,6 +62,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let keyword = utf8_percent_encode(&args.searchterm.join(" "), NON_ALPHANUMERIC).to_string();
     let sort_method = args.sort;
+
+    let colorful = match args.color {
+        ColorOptions::Never => false,
+        ColorOptions::Always => true,
+        // Enable colors if:
+        // * NO_COLOR env var isn't set: https://no-color.org/
+        // * The output stream is stdout (not being piped)
+        ColorOptions::Auto => std::env::var_os("NO_COLOR").is_none() && atty::is(Stream::Stdout),
+    };
 
     // create all search providers
     let providers: Vec<Box<dyn SearchProvider>> = if args.search_providers.is_empty() {
@@ -82,7 +105,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // print out all torrents
     for torrent in torrents.iter() {
-        torrent.print();
+        torrent.print(colorful);
     }
 
     Ok(())
