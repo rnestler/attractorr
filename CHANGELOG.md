@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * Build with msvc toolchain on Windows
  * Use structopt instead of docopt for command line parsing
 
+### Fixed
+
+ * Do not output error message pseudo torrent from piratebay
+
 ## [0.1.0] - 2021-10-23
 
  * Initial release

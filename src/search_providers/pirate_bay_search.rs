@@ -71,6 +71,11 @@ fn parse_piratebay(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send +
 
     let results = entries
         .iter()
+        .filter(|entry| {
+            entry.id != "0"
+                && entry.name != "No results returned"
+                && entry.info_hash != "0000000000000000000000000000000000000000"
+        })
         .map(|entry| Torrent {
             name: entry.name.clone(),
             magnet_link: format!("magnet:?xt=urn:btih:{}", entry.info_hash),
@@ -84,6 +89,7 @@ fn parse_piratebay(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send +
 #[cfg(test)]
 mod test {
     static TEST_DATA: &str = include_str!("test_data/piratebay.json");
+    static TEST_DATA_EMPTY: &str = include_str!("test_data/piratebay-empty.json");
 
     #[test]
     fn test_parse_piratebay() {
@@ -94,5 +100,11 @@ mod test {
             assert!(torrent.seeders.is_some());
             assert!(torrent.leechers.is_some());
         }
+    }
+
+    #[test]
+    fn test_parse_piratebay_empty() {
+        let torrents = super::parse_piratebay(TEST_DATA_EMPTY).unwrap();
+        assert_eq!(torrents.len(), 0);
     }
 }
