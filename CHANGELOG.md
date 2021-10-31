@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Build with msvc toolchain on Windows
  * Use structopt instead of docopt for command line parsing
+ * Print a warning to stderr when no results were found
 
 ### Fixed
 

@@ -103,6 +103,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         };
     }
 
+    if torrents.is_empty() {
+        eprintln!("No results were found");
+    }
+
     // print out all torrents
     for torrent in torrents.iter() {
         torrent.print(colorful);
