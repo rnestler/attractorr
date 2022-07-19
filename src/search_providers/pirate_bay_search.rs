@@ -11,18 +11,18 @@ use std::error::Error;
 
 #[derive(Debug, Deserialize)]
 pub struct Entry {
-    id: String,
-    name: String,
-    info_hash: String,
-    leechers: String,
-    seeders: String,
-    num_files: String,
-    size: String,
-    username: String,
-    added: String,
-    status: String,
-    category: String,
-    imdb: String,
+    pub id: String,
+    pub name: String,
+    pub info_hash: String,
+    pub leechers: String,
+    pub seeders: String,
+    pub num_files: String,
+    pub size: String,
+    pub username: String,
+    pub added: String,
+    pub status: String,
+    pub category: String,
+    pub imdb: String,
 }
 
 pub struct PirateBaySearch {

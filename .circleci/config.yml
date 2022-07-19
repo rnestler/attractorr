@@ -4,6 +4,8 @@ jobs:
   test:
     docker:
       - image: rust:1.56
+    environment:
+      RUSTFLAGS: "-D warnings"
     steps:
       - checkout
       - restore_cache:

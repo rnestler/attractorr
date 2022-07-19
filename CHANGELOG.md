@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Update dependencies
  * Bump MSRV to 1.56
+ * Make `search_providers::pirate_bay_search::Entry` fields public
 
 ## [0.2.0] - 2021-10-31
 
