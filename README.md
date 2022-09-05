@@ -50,6 +50,7 @@ Here is a list of projects which do similar things:
  * https://crates.io/crates/torrentfind/
  * https://crates.io/crates/nyaadesu
  * https://crates.io/crates/ktorrent
+ * https://crates.io/crates/magnetfinder
 
 ## License
 
