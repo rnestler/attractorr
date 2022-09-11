@@ -1,5 +1,5 @@
-[![CircleCI](https://circleci.com/gh/rnestler/rust-torrent-search.svg?style=svg)](https://circleci.com/gh/rnestler/rust-torrent-search)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/6xjt3r1l1hqbm116/branch/master?svg=true)](https://ci.appveyor.com/project/rnestler/rust-torrent-search)
+[![CircleCI](https://circleci.com/gh/rnestler/attractorr.svg?style=svg)](https://circleci.com/gh/rnestler/attractorr)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/6xjt3r1l1hqbm116/branch/master?svg=true)](https://ci.appveyor.com/project/rnestler/attractorr)
 # Attractorr
 
 Attractorr attracts magnets!
@@ -33,7 +33,7 @@ $ cargo build
 ## Install
 
 ```
-cargo install --git https://github.com/rnestler/rust-torrent-search
+cargo install --git https://github.com/rnestler/attractorr
 ```
 
 ## Usage
