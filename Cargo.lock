@@ -32,6 +32,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "attractor"
+version = "0.2.0"
+dependencies = [
+ "ansi_term",
+ "async-trait",
+ "atty",
+ "bytes",
+ "env_logger",
+ "futures-util",
+ "hyper",
+ "hyper-tls",
+ "log",
+ "percent-encoding",
+ "select",
+ "serde",
+ "serde_json",
+ "structopt",
+ "tokio",
+ "torrent_search",
+ "yts-api",
+]
+
+[[package]]
 name = "atty"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1260,29 +1283,6 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tracing",
-]
-
-[[package]]
-name = "torrent-search"
-version = "0.2.0"
-dependencies = [
- "ansi_term",
- "async-trait",
- "atty",
- "bytes",
- "env_logger",
- "futures-util",
- "hyper",
- "hyper-tls",
- "log",
- "percent-encoding",
- "select",
- "serde",
- "serde_json",
- "structopt",
- "tokio",
- "torrent_search",
- "yts-api",
 ]
 
 [[package]]
