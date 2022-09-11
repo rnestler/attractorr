@@ -1,12 +1,14 @@
 [package]
-name = "torrent-search"
+name = "attractor"
 version = "0.2.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 edition = "2021"
 rust-version = "1.56"
-description = "A CLI tool to search various torrent directories"
+description = "A CLI tool to scrape the web for magnet links"
 repository = "https://github.com/rnestler/rust-torrent-search/"
 license = "MIT OR Apache-2.0"
+keywords = ["cli", "torrent", "magnet"]
+categories = ["command-line-utilities"]
 
 [profile.release]
 codegen-units = 1
