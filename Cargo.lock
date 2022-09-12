@@ -32,7 +32,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "attractor"
+name = "attractorr"
 version = "0.3.0"
 dependencies = [
  "ansi_term",
