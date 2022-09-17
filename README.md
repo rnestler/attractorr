@@ -37,7 +37,7 @@ $ cargo build
 ## Install
 
 ```
-cargo install --git https://github.com/rnestler/attractorr
+cargo install attractorr
 ```
 
 ## Usage
