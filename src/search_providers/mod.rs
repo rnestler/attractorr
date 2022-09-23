@@ -1,7 +1,6 @@
 use crate::torrent::Torrent;
 use async_trait::async_trait;
 use std::error::Error;
-use structopt::clap::arg_enum;
 
 pub mod l337x_search;
 pub mod pirate_bay_search;
@@ -13,13 +12,11 @@ use yts_search::YtsSearch;
 
 const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
-arg_enum! {
-    #[derive(Copy, Clone, Debug)]
-    pub enum SearchProviderId {
-        L337x,
-        PirateBay,
-        Yts,
-    }
+#[derive(clap::ValueEnum, Copy, Clone, Debug)]
+pub enum SearchProviderId {
+    L337x,
+    PirateBay,
+    Yts,
 }
 
 #[async_trait]
