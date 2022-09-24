@@ -17,13 +17,7 @@ impl Torrent {
         write!(stdout, "{}", text)?;
         stdout.reset()
     }
-    pub fn print(&self, colorful: bool) {
-        let color_choice = if colorful {
-            ColorChoice::Always
-        } else {
-            ColorChoice::Never
-        };
-
+    pub fn print(&self, color_choice: ColorChoice) {
         let seeders = self
             .seeders
             .map(|v| format!("{}", v))
