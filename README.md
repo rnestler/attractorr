@@ -52,7 +52,7 @@ To search for "search term" in all supported sources.
 
 With `--search-providers` one may limit the sources:
 ```
-$ cargo run -- --sort seeders --search-providers yts,piratebay test
+$ cargo run -- --sort seeders --search-providers yts,pirate-bay test
 ```
 
 ## Alternatives

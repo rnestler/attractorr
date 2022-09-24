@@ -8,44 +8,51 @@ mod torrent;
 use torrent::Torrent;
 
 use atty::Stream;
+use clap::Parser;
 use futures_util::future::join_all;
 use log::{debug, error};
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
-use structopt::clap::arg_enum;
-use structopt::StructOpt;
 
-arg_enum! {
-    #[derive(Debug)]
-    enum SortMethods {
-        Seeders,
-        Leechers,
-    }
+#[derive(clap::ValueEnum, Clone, Copy, Debug)]
+enum SortMethods {
+    Seeders,
+    Leechers,
 }
 
-arg_enum! {
-    #[derive(Debug, Eq, PartialEq, Copy, Clone)]
-    pub enum ColorOptions {
-        Always,
-        Auto,
-        Never,
-    }
+#[derive(clap::ValueEnum, Debug, Eq, PartialEq, Copy, Clone)]
+pub enum ColorOptions {
+    Always,
+    Auto,
+    Never,
 }
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 struct Args {
     /// Sort results by the number of seeders or leechers.
-    #[structopt(long, possible_values = &SortMethods::variants(), case_insensitive = true)]
+    #[clap(long, value_enum, case_insensitive = true)]
     sort: Option<SortMethods>,
 
     /// Use the given search providers
-    #[structopt(long, multiple = false, use_delimiter = true, possible_values = &SearchProviderId::variants(), case_insensitive = true)]
+    #[clap(
+        long,
+        multiple = false,
+        use_delimiter = true,
+        value_enum,
+        case_insensitive = true
+    )]
     search_providers: Vec<SearchProviderId>,
 
     /// Control whether to use color
-    #[structopt(long, value_name = "WHEN", possible_values = &ColorOptions::variants(), case_insensitive = true, default_value="auto")]
+    #[clap(
+        long,
+        value_name = "WHEN",
+        value_enum,
+        case_insensitive = true,
+        default_value = "auto"
+    )]
     color: ColorOptions,
 
-    #[structopt(name = "SEARCHTERM", required = true, min_values = 1)]
+    #[clap(name = "SEARCHTERM", required = true, min_values = 1)]
     searchterm: Vec<String>,
 }
 
