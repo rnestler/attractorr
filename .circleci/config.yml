@@ -3,7 +3,7 @@ jobs:
 
   test:
     docker:
-      - image: rust:1.56
+      - image: rust:1.57
     environment:
       RUSTFLAGS: "-D warnings"
     steps:
@@ -36,7 +36,7 @@ jobs:
             - /usr/local/cargo
   lint:
     docker:
-      - image: rust:1.56
+      - image: rust:1.57
     steps:
       - checkout
       - restore_cache:
@@ -53,7 +53,7 @@ jobs:
             - /usr/local/cargo
   fmt:
     docker:
-      - image: rust:1.56
+      - image: rust:1.57
     steps:
       - checkout
       - restore_cache:
