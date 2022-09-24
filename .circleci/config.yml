@@ -39,32 +39,15 @@ jobs:
       - image: rust:1.57
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-cargo-lint-cache
-      - run:
-          name: Install dependencies
-          command: apt-get update && apt-get install -y libdbus-glib-1-dev
-      - run: rustup component add clippy
       - run: cargo clippy --all-targets --all-features -- -D warnings
-      - save_cache:
-          key: v1-cargo-lint-cache
-          paths:
-            - /usr/local/cargo
+
   fmt:
     docker:
       - image: rust:1.57
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-cargo-fmt-cache
-      - run: rustup component add rustfmt
       - run: cargo fmt -- --check
-      - save_cache:
-          key: v1-cargo-lint-cache
-          paths:
-            - /usr/local/cargo
+
   audit:
     docker:
       - image: rust:latest
