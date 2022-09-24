@@ -1,5 +1,6 @@
-use ansi_term::{Color, Style};
 use std::cmp::Ordering;
+use std::io::{self, Write};
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 #[derive(Debug)]
 pub struct Torrent {
@@ -10,20 +11,26 @@ pub struct Torrent {
 }
 
 impl Torrent {
-    pub fn print(&self, colorful: bool) {
-        let (seeders_style, leechers_style) = if colorful {
-            (Style::new().fg(Color::Green), Style::new().fg(Color::Red))
-        } else {
-            (Style::default(), Style::default())
-        };
+    fn print_with_color(text: &str, color_choice: ColorChoice, color: Color) -> io::Result<()> {
+        let mut stdout = StandardStream::stdout(color_choice);
+        stdout.set_color(ColorSpec::new().set_fg(Some(color)))?;
+        write!(stdout, "{}", text)?;
+        stdout.reset()
+    }
+    pub fn print(&self, color_choice: ColorChoice) {
+        let seeders = self
+            .seeders
+            .map(|v| format!("{}", v))
+            .unwrap_or_else(|| "n/a".to_owned());
+        let leechers = self
+            .leechers
+            .map(|v| format!("{}", v))
+            .unwrap_or_else(|| "n/a".to_owned());
 
-        if let (Some(seeders), Some(leechers)) = (self.seeders, self.leechers) {
-            print!(
-                "{}/{} - ",
-                seeders_style.paint(format!("S:{}", seeders)),
-                leechers_style.paint(format!("L:{}", leechers))
-            );
-        }
+        Self::print_with_color(&seeders, color_choice, Color::Green).ok();
+        print!("/");
+        Self::print_with_color(&leechers, color_choice, Color::Red).ok();
+        print!(" - ");
         println!("{}", self.name);
         println!("{}", self.magnet_link);
         println!();

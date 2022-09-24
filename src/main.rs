@@ -12,6 +12,7 @@ use clap::Parser;
 use futures_util::future::join_all;
 use log::{debug, error};
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
+use termcolor::ColorChoice;
 
 #[derive(clap::ValueEnum, Clone, Copy, Debug)]
 enum SortMethods {
@@ -70,13 +71,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let keyword = utf8_percent_encode(&args.searchterm.join(" "), NON_ALPHANUMERIC).to_string();
     let sort_method = args.sort;
 
-    let colorful = match args.color {
-        ColorOptions::Never => false,
-        ColorOptions::Always => true,
-        // Enable colors if:
-        // * NO_COLOR env var isn't set: https://no-color.org/
-        // * The output stream is stdout (not being piped)
-        ColorOptions::Auto => std::env::var_os("NO_COLOR").is_none() && atty::is(Stream::Stdout),
+    let color_choice = match args.color {
+        ColorOptions::Never => ColorChoice::Never,
+        ColorOptions::Always => ColorChoice::Always,
+        // If stdout is a tty (not being piped) let termcolor decide if we should use colors. See
+        // https://docs.rs/termcolor/1.1.3/termcolor/index.html#detecting-presence-of-a-terminal
+        ColorOptions::Auto => {
+            if atty::is(Stream::Stdout) {
+                ColorChoice::Auto
+            } else {
+                ColorChoice::Never
+            }
+        }
     };
 
     // create all search providers
@@ -116,7 +122,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // print out all torrents
     for torrent in torrents.iter() {
-        torrent.print(colorful);
+        torrent.print(color_choice);
     }
 
     Ok(())
