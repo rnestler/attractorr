@@ -40,6 +40,16 @@ $ cargo build
 cargo install attractorr
 ```
 
+### Distro Packages
+
+#### Arch Linux
+
+On Arch Linux, you can use an [AUR helper](https://wiki.archlinux.org/title/AUR_helpers) to install:
+
+```
+paru -S attractorr
+```
+
 ## Usage
 
 Just execute
