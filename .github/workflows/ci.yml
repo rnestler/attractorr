@@ -1,0 +1,36 @@
+name: CI
+on: [push]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-22.04
+    container: rust:1.57
+    steps:
+      - uses: actions/checkout@v2
+      - run: apt-get update && apt-get install -y libdbus-glib-1-dev
+      - run: cargo build
+      - run: cargo test
+
+  lint:
+    runs-on: ubuntu-22.04
+    container: rust:1.57
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup component add clippy
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+
+  fmt:
+    runs-on: ubuntu-22.04
+    container: rust:1.57
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup component add rustfmt
+      - run: cargo fmt -- --check
+
+  audit:
+    runs-on: ubuntu-22.04
+    container: rnestler/archlinux-rust:1.64.0
+    steps:
+      - uses: actions/checkout@v2
+      - run: pacman --noconfirm -Sy cargo-audit
+      - run: cargo audit --ignore RUSTSEC-2020-0071
