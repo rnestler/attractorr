@@ -2,6 +2,13 @@ name: CI
 on: [push]
 
 jobs:
+  windows_build_and_test:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v2
+      - run: cargo build
+      - run: cargo test
+
   build_and_test:
     runs-on: ubuntu-22.04
     container: rust:1.57
