@@ -1,7 +1,6 @@
 # Attractorr
 
-[![CircleCI](https://circleci.com/gh/rnestler/attractorr.svg?style=svg)](https://circleci.com/gh/rnestler/attractorr)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/6xjt3r1l1hqbm116/branch/master?svg=true)](https://ci.appveyor.com/project/rnestler/attractorr)
+[![GitHub Actions Build Status](https://github.com/rnestler/attractorr/actions/workflows/ci.yml/badge.svg)](https://github.com/rnestler/attractorr/actions/workflows/ci.yml)
 [![Crates.io Version](https://img.shields.io/crates/v/attractorr.svg)](https://crates.io/crates/attractorr)
 [![Crates.io Downloads](https://img.shields.io/crates/d/attractorr.svg)](https://crates.io/crates/attractorr)
 [![AUR version](https://img.shields.io/aur/version/attractorr?label=AUR)](https://aur.archlinux.org/packages/attractorr)
