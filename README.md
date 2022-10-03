@@ -44,7 +44,9 @@ cargo install attractorr
 
 #### Arch Linux
 
-On Arch Linux, you can use an [AUR helper](https://wiki.archlinux.org/title/AUR_helpers) to install:
+On Arch Linux it is available from the
+[AUR](https://aur.archlinux.org/packages/attractorr). You can use an [AUR
+helper](https://wiki.archlinux.org/title/AUR_helpers) to install:
 
 ```
 paru -S attractorr
