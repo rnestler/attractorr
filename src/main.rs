@@ -30,17 +30,11 @@ pub enum ColorOptions {
 #[derive(Debug, Parser)]
 struct Args {
     /// Sort results by the number of seeders or leechers.
-    #[clap(long, value_enum, case_insensitive = true)]
+    #[clap(long, value_enum, ignore_case = true)]
     sort: Option<SortMethods>,
 
     /// Use the given search providers
-    #[clap(
-        long,
-        multiple = false,
-        use_delimiter = true,
-        value_enum,
-        case_insensitive = true
-    )]
+    #[clap(long, use_value_delimiter = true, value_enum, ignore_case = true)]
     search_providers: Vec<SearchProviderId>,
 
     /// Control whether to use color
@@ -48,7 +42,7 @@ struct Args {
         long,
         value_name = "WHEN",
         value_enum,
-        case_insensitive = true,
+        ignore_case = true,
         default_value = "auto"
     )]
     color: ColorOptions,
@@ -64,7 +58,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .init();
 
     // parse arguments
-    let args = Args::from_args();
+    let args = Args::parse();
 
     debug!("Searchterm: {:?}", args.searchterm);
 
