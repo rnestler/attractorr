@@ -11,7 +11,7 @@ jobs:
 
   build_and_test:
     runs-on: ubuntu-22.04
-    container: rust:1.57
+    container: rust:1.60
     steps:
       - uses: actions/checkout@v2
       - run: apt-get update && apt-get install -y libdbus-glib-1-dev
@@ -20,7 +20,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-22.04
-    container: rust:1.57
+    container: rust:1.64
     steps:
       - uses: actions/checkout@v2
       - run: rustup component add clippy
@@ -28,7 +28,7 @@ jobs:
 
   fmt:
     runs-on: ubuntu-22.04
-    container: rust:1.57
+    container: rust:1.64
     steps:
       - uses: actions/checkout@v2
       - run: rustup component add rustfmt

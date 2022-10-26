@@ -47,7 +47,7 @@ struct Args {
     )]
     color: ColorOptions,
 
-    #[clap(name = "SEARCHTERM", required = true, min_values = 1)]
+    #[clap(name = "SEARCHTERM", required = true, num_args=1..)]
     searchterm: Vec<String>,
 }
 
