@@ -1,6 +1,7 @@
 mod search_providers;
 use search_providers::l337x_search::L337xSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
+use search_providers::torrent_csv_search::TorrentCsvSearch;
 use search_providers::yts_search::YtsSearch;
 use search_providers::{search_providers_from_ids, SearchProvider, SearchProviderId};
 
@@ -85,6 +86,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Box::new(PirateBaySearch::new()),
             Box::new(L337xSearch::new()),
             Box::new(YtsSearch::new()),
+            Box::new(TorrentCsvSearch::new()),
         ]
     } else {
         search_providers_from_ids(&args.search_providers)
