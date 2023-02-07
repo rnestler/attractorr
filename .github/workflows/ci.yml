@@ -1,5 +1,5 @@
 name: CI
-on: [push]
+on: [push, pull_request]
 
 jobs:
   windows_build_and_test:
