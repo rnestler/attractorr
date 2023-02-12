@@ -4,10 +4,12 @@ use std::error::Error;
 
 pub mod l337x_search;
 pub mod pirate_bay_search;
+pub mod torrent_csv_search;
 pub mod yts_search;
 
 use l337x_search::L337xSearch;
 use pirate_bay_search::PirateBaySearch;
+use torrent_csv_search::TorrentCsvSearch;
 use yts_search::YtsSearch;
 
 const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
@@ -17,6 +19,7 @@ pub enum SearchProviderId {
     L337x,
     PirateBay,
     Yts,
+    TorrentCsv,
 }
 
 #[async_trait]
@@ -30,6 +33,7 @@ pub fn search_provider_from_id(id: &SearchProviderId) -> Box<dyn SearchProvider>
         SearchProviderId::L337x => Box::new(L337xSearch::new()),
         SearchProviderId::PirateBay => Box::new(PirateBaySearch::new()),
         SearchProviderId::Yts => Box::new(YtsSearch::new()),
+        SearchProviderId::TorrentCsv => Box::new(TorrentCsvSearch::new()),
     }
 }
 
