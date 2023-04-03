@@ -8,9 +8,9 @@ use search_providers::{search_providers_from_ids, SearchProvider, SearchProvider
 mod torrent;
 use torrent::Torrent;
 
-use atty::Stream;
 use clap::Parser;
 use futures_util::future::join_all;
+use is_terminal::IsTerminal;
 use log::{debug, error};
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
 use termcolor::ColorChoice;
@@ -72,7 +72,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // If stdout is a tty (not being piped) let termcolor decide if we should use colors. See
         // https://docs.rs/termcolor/1.1.3/termcolor/index.html#detecting-presence-of-a-terminal
         ColorOptions::Auto => {
-            if atty::is(Stream::Stdout) {
+            if std::io::stdout().is_terminal() {
                 ColorChoice::Auto
             } else {
                 ColorChoice::Never
