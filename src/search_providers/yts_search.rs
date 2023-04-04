@@ -5,7 +5,7 @@ use async_trait::async_trait;
 
 use log::info;
 use std::error::Error;
-use yts_api::{list_movies, MovieList};
+use yts_api::{ListMovies, MovieList};
 
 pub struct YtsSearch {}
 
@@ -19,7 +19,7 @@ impl YtsSearch {
 impl SearchProvider for YtsSearch {
     async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on YTS");
-        let res = list_movies(term).await?;
+        let res = ListMovies::new().query_term(term).execute().await?;
 
         Ok(parse_yts(res))
     }
