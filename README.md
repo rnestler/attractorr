@@ -13,7 +13,7 @@ magnet links.
 ## Supported Websites
 
  * 1337x
- * TYS
+ * YTS
  * piratebay
  * torrent-csv
 
