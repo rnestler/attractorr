@@ -26,7 +26,7 @@ env_logger = "0.10.0"
 log = "^0.4"
 async-trait = "^0.1.60"
 tokio = { version = "1.28.2", features = ["macros", "rt-multi-thread"] }
-percent-encoding = "^2.1.0"
+percent-encoding = "^2.3.0"
 futures-util = "0.3.26"
 torrent_search = "0.3"
 yts-api = "0.3"
