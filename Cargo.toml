@@ -17,7 +17,7 @@ lto = "fat"
 [dependencies]
 hyper = { version = "0.14.26", features = ["full"] }
 hyper-tls = "0.5.0"
-clap = { version = "4.3.0", features = ["help", "usage", "error-context", "std", "derive"], default_features = false }
+clap = { version = "4.3.19", features = ["help", "usage", "error-context", "std", "derive"], default_features = false }
 termcolor = "1.2.0"
 is-terminal = "0.4.7"
 serde = { version = "1.0.163", features = ["derive"] }
