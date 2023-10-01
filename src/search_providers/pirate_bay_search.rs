@@ -81,6 +81,7 @@ fn parse_piratebay(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send +
             magnet_link: format!("magnet:?xt=urn:btih:{}", entry.info_hash),
             seeders: entry.seeders.parse().ok(),
             leechers: entry.leechers.parse().ok(),
+            size_bytes: entry.size.parse().ok(),
         })
         .collect();
     Ok(results)
@@ -99,6 +100,7 @@ mod test {
             assert!(torrent.magnet_link.starts_with("magnet:?"));
             assert!(torrent.seeders.is_some());
             assert!(torrent.leechers.is_some());
+            assert!(torrent.size_bytes.is_some());
         }
     }
 

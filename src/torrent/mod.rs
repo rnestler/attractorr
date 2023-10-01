@@ -1,13 +1,15 @@
+use bytesize::ByteSize;
 use std::cmp::Ordering;
 use std::io::{self, Write};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Torrent {
     pub name: String,
     pub magnet_link: String,
     pub seeders: Option<u32>,
     pub leechers: Option<u32>,
+    pub size_bytes: Option<u64>,
 }
 
 impl Torrent {
@@ -31,7 +33,11 @@ impl Torrent {
         print!("/");
         Self::print_with_color(&leechers, color_choice, Color::Red).ok();
         print!(" - ");
-        println!("{}", self.name);
+        print!("{}", self.name);
+        if let Some(size_bytes) = self.size_bytes {
+            print!(" ({})", ByteSize(size_bytes));
+        }
+        println!();
         println!("{}", self.magnet_link);
         println!();
     }

@@ -13,8 +13,8 @@ use std::error::Error;
 pub struct Entry {
     pub infohash: String,
     pub name: String,
-    pub size_bytes: Option<u32>,
-    pub created_unix: Option<u32>,
+    pub size_bytes: Option<u64>,
+    pub created_unix: Option<u64>,
     pub seeders: Option<u32>,
     pub leechers: Option<u32>,
     pub completed: Option<u32>,
@@ -72,6 +72,7 @@ fn parse_torrent_csv(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send
             magnet_link: format!("magnet:?xt=urn:btih:{}", entry.infohash),
             seeders: entry.seeders,
             leechers: entry.leechers,
+            size_bytes: entry.size_bytes,
         })
         .collect();
     Ok(results)
@@ -90,6 +91,7 @@ mod test {
             assert!(torrent.magnet_link.starts_with("magnet:?"));
             assert!(torrent.seeders.is_some());
             assert!(torrent.leechers.is_some());
+            assert!(torrent.size_bytes.is_some());
         }
     }
 
