@@ -1,3 +1,4 @@
+use bytesize::ByteSize;
 use std::cmp::Ordering;
 use std::io::{self, Write};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
@@ -34,7 +35,7 @@ impl Torrent {
         print!(" - ");
         print!("{}", self.name);
         if let Some(size_bytes) = self.size_bytes {
-            print!(" ({} Bytes)", size_bytes);
+            print!(" ({})", ByteSize(size_bytes));
         }
         println!();
         println!("{}", self.magnet_link);
