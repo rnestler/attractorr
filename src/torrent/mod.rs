@@ -8,6 +8,7 @@ pub struct Torrent {
     pub magnet_link: String,
     pub seeders: Option<u32>,
     pub leechers: Option<u32>,
+    pub size_bytes: Option<u64>,
 }
 
 impl Torrent {
