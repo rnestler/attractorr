@@ -32,7 +32,11 @@ impl Torrent {
         print!("/");
         Self::print_with_color(&leechers, color_choice, Color::Red).ok();
         print!(" - ");
-        println!("{}", self.name);
+        print!("{}", self.name);
+        if let Some(size_bytes) = self.size_bytes {
+            print!(" ({} Bytes)", size_bytes);
+        }
+        println!();
         println!("{}", self.magnet_link);
         println!();
     }
