@@ -72,6 +72,7 @@ fn parse_torrent_csv(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send
             magnet_link: format!("magnet:?xt=urn:btih:{}", entry.infohash),
             seeders: entry.seeders,
             leechers: entry.leechers,
+            size_bytes: entry.size_bytes,
             ..Default::default()
         })
         .collect();
@@ -91,6 +92,7 @@ mod test {
             assert!(torrent.magnet_link.starts_with("magnet:?"));
             assert!(torrent.seeders.is_some());
             assert!(torrent.leechers.is_some());
+            assert!(torrent.size_bytes.is_some());
         }
     }
 
