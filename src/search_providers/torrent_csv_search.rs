@@ -72,6 +72,7 @@ fn parse_torrent_csv(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send
             magnet_link: format!("magnet:?xt=urn:btih:{}", entry.infohash),
             seeders: entry.seeders,
             leechers: entry.leechers,
+            ..Default::default()
         })
         .collect();
     Ok(results)

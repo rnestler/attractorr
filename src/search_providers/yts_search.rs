@@ -42,6 +42,7 @@ fn parse_yts(movie_list: MovieList) -> Vec<Torrent> {
                 magnet_link: format!("magnet:?xt=urn:btih:{}", torrent.hash),
                 seeders: Some(torrent.seeds),
                 leechers: Some(torrent.peers),
+                ..Default::default()
             });
         }
     }

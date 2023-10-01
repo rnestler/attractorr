@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::io::{self, Write};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Torrent {
     pub name: String,
     pub magnet_link: String,
