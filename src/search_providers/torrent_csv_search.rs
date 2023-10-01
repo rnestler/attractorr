@@ -13,8 +13,8 @@ use std::error::Error;
 pub struct Entry {
     pub infohash: String,
     pub name: String,
-    pub size_bytes: Option<u32>,
-    pub created_unix: Option<u32>,
+    pub size_bytes: Option<u64>,
+    pub created_unix: Option<u64>,
     pub seeders: Option<u32>,
     pub leechers: Option<u32>,
     pub completed: Option<u32>,
