@@ -43,7 +43,6 @@ fn parse_yts(movie_list: MovieList) -> Vec<Torrent> {
                 seeders: Some(torrent.seeds),
                 leechers: Some(torrent.peers),
                 size_bytes: Some(torrent.size_bytes),
-                ..Default::default()
             });
         }
     }
