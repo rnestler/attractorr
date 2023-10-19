@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
  * Print size of torrents when supported
+ * Bump MSRV to 1.70
 
 ## [0.5.3] - 2023-07-11
 
