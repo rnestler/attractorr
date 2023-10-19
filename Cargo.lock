@@ -45,7 +45,7 @@ dependencies = [
 
 [[package]]
 name = "attractorr"
-version = "0.5.3"
+version = "0.6.0"
 dependencies = [
  "async-trait",
  "bytesize",
