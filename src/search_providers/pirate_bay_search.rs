@@ -2,8 +2,13 @@ use crate::search_providers::SearchProvider;
 use crate::torrent::Torrent;
 
 use async_trait::async_trait;
-use hyper::{body::HttpBody, Body, Client, Request};
+use bytes::Bytes;
+use http_body_util::BodyExt;
+use http_body_util::Empty;
+use hyper::Request;
 use hyper_tls::HttpsConnector;
+use hyper_util::client::legacy::Client;
+use hyper_util::rt::TokioExecutor;
 use log::info;
 use serde::Deserialize;
 
@@ -25,15 +30,11 @@ pub struct Entry {
     pub imdb: String,
 }
 
-pub struct PirateBaySearch {
-    connection: Client<HttpsConnector<hyper::client::HttpConnector>>,
-}
+pub struct PirateBaySearch {}
 
 impl PirateBaySearch {
     pub fn new() -> PirateBaySearch {
-        let https = HttpsConnector::new();
-        let client = hyper::Client::builder().build::<_, hyper::Body>(https);
-        PirateBaySearch { connection: client }
+        PirateBaySearch {}
     }
 }
 
@@ -43,18 +44,24 @@ impl SearchProvider for PirateBaySearch {
         info!("Searching on PirateBay");
         let url = format!("https://apibay.org/q.php?q={}", term);
 
+        let https = HttpsConnector::new();
+        let client = Client::builder(TokioExecutor::new()).build::<_, Empty<Bytes>>(https);
+
         let request = Request::get(url)
             .header(hyper::header::USER_AGENT, super::USER_AGENT)
-            .body(Body::empty())
+            .body(Empty::new())
             .expect("Request builder");
 
-        let mut res = self.connection.request(request).await?;
+        let mut res = client.request(request).await?;
 
         info!("Status: {}", res.status());
         let mut bytes = Vec::new();
-        while let Some(next) = res.data().await {
-            let chunk = next?;
-            bytes.extend(chunk);
+
+        while let Some(frame) = res.body_mut().frame().await {
+            let frame = frame?;
+            if let Some(data) = frame.data_ref() {
+                bytes.extend(data);
+            }
         }
 
         let body = String::from_utf8(bytes)?;
