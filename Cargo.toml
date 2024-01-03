@@ -31,6 +31,6 @@ log = "^0.4"
 async-trait = "^0.1.73"
 tokio = { version = "1.32.0", features = ["macros", "rt-multi-thread"] }
 percent-encoding = "^2.1.0"
-futures-util = "0.3.26"
+futures-util = "0.3.30"
 torrent_search = "0.3"
 yts-api = "0.3"
