@@ -38,7 +38,10 @@ impl TorrentCsvSearch {
 impl SearchProvider for TorrentCsvSearch {
     async fn search(&self, term: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
         info!("Searching on Torrent-CSV");
-        let url = format!("https://torrents-csv.ml/service/search?size=300&q={}", term);
+        let url = format!(
+            "https://torrents-csv.com/service/search?size=300&q={}",
+            term
+        );
 
         let https = HttpsConnector::new();
         let client = Client::builder(TokioExecutor::new()).build::<_, Empty<Bytes>>(https);
