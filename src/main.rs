@@ -29,6 +29,10 @@ pub enum ColorOptions {
 }
 
 #[derive(Debug, Parser)]
+#[clap(
+    version,
+    about = "Attractorr attracts magnets! A tool to collect magnet links from various sources."
+)]
 struct Args {
     /// Sort results by the number of seeders or leechers.
     #[clap(long, value_enum, ignore_case = true)]
