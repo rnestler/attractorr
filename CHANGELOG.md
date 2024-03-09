@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
- * Bump MSRV to 1.70
+ * Bump MSRV to 1.74
  * Update dependencies
 
 ### Added
