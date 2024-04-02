@@ -7,3 +7,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    groups:
+      patch-and-minor:
+        update-types:
+          - patch
+          - minor
