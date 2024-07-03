@@ -15,6 +15,12 @@ use serde::Deserialize;
 use std::error::Error;
 
 #[derive(Debug, Deserialize)]
+pub struct Response {
+    pub torrents: Vec<Entry>,
+    pub next: u64,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct Entry {
     pub infohash: String,
     pub name: String,
@@ -73,9 +79,10 @@ impl SearchProvider for TorrentCsvSearch {
 }
 
 fn parse_torrent_csv(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send + Sync>> {
-    let entries: Vec<Entry> = serde_json::from_str(content)?;
+    let res: Response = serde_json::from_str(content)?;
 
-    let results = entries
+    let results = res
+        .torrents
         .iter()
         .map(|entry| Torrent {
             name: entry.name.clone(),
