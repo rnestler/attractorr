@@ -16,20 +16,20 @@ lto = "fat"
 
 [dependencies]
 bytesize = "1.3.0"
-bytes = "1.5.0"
-hyper = { version = "1.3.1", features = ["full"] }
-hyper-util = { version = "0.1.5", features = ["full"] }
+bytes = "1.7.0"
+hyper = { version = "1.4.1", features = ["full"] }
+hyper-util = { version = "0.1.6", features = ["full"] }
 http-body-util = "0.1.2"
 hyper-tls = "0.6.0"
-clap = { version = "4.5.8", features = ["help", "usage", "error-context", "std", "derive"], default_features = false }
+clap = { version = "4.5.13", features = ["help", "usage", "error-context", "std", "derive"], default_features = false }
 termcolor = "1.3.0"
 is-terminal = "0.4.10"
-serde = { version = "1.0.203", features = ["derive"] }
-serde_json = "1.0.119"
-env_logger = "0.11.1"
+serde = { version = "1.0.204", features = ["derive"] }
+serde_json = "1.0.121"
+env_logger = "0.11.5"
 log = "^0.4"
-async-trait = "^0.1.80"
-tokio = { version = "1.38.0", features = ["macros", "rt-multi-thread"] }
+async-trait = "^0.1.81"
+tokio = { version = "1.39.2", features = ["macros", "rt-multi-thread"] }
 percent-encoding = "^2.1.0"
 futures-util = "0.3.30"
 torrent_search = "0.3"
