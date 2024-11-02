@@ -35,15 +35,22 @@ pub enum ColorOptions {
 )]
 struct Args {
     /// Sort results by the number of seeders or leechers.
-    #[clap(long, value_enum, ignore_case = true)]
+    #[clap(short, long, value_enum, ignore_case = true)]
     sort: Option<SortMethods>,
 
     /// Use the given search providers
-    #[clap(long, use_value_delimiter = true, value_enum, ignore_case = true)]
+    #[clap(
+        short = 'p',
+        long,
+        use_value_delimiter = true,
+        value_enum,
+        ignore_case = true
+    )]
     search_providers: Vec<SearchProviderId>,
 
     /// Control whether to use color
     #[clap(
+        short,
         long,
         value_name = "WHEN",
         value_enum,
