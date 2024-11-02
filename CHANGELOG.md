@@ -105,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Breaking
 
  * `piratebay` changed to `pirate-bay` when specifing it as a search provider
-   with `--search-providers` 
+   with `--search-providers`
 
 ## [0.3.0] - 2022-09-12
 
@@ -118,7 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2021-10-31
 
-### Added 
+### Added
 
  * Allow to specify search providers on command line
  * Allow to disable colored output
