@@ -29,7 +29,7 @@ serde_json = "1.0.140"
 env_logger = "0.11.6"
 log = "^0.4"
 async-trait = "^0.1.88"
-tokio = { version = "1.44.1", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.44.2", features = ["macros", "rt-multi-thread"] }
 percent-encoding = "^2.1.0"
 futures-util = "0.3.31"
 torrent_search = "0.3"
