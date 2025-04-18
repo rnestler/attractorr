@@ -89,6 +89,7 @@ fn parse_piratebay(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send +
             seeders: entry.seeders.parse().ok(),
             leechers: entry.leechers.parse().ok(),
             size_bytes: entry.size.parse().ok(),
+            source: "PB",
         })
         .collect();
     Ok(results)
