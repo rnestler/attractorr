@@ -10,6 +10,7 @@ pub struct Torrent {
     pub seeders: Option<u32>,
     pub leechers: Option<u32>,
     pub size_bytes: Option<u64>,
+    pub source: &'static str,
 }
 
 impl Torrent {
@@ -34,10 +35,11 @@ impl Torrent {
         Self::print_with_color(&leechers, color_choice, Color::Red).ok();
         print!(" - ");
         print!("{}", self.name);
+        print!(" ({}", self.source);
         if let Some(size_bytes) = self.size_bytes {
-            print!(" ({})", ByteSize(size_bytes));
+            print!(", {}", ByteSize(size_bytes));
         }
-        println!();
+        println!(")");
         println!("{}", self.magnet_link);
         println!();
     }

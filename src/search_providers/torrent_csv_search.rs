@@ -90,6 +90,7 @@ fn parse_torrent_csv(content: &str) -> Result<Vec<Torrent>, Box<dyn Error + Send
             seeders: entry.seeders,
             leechers: entry.leechers,
             size_bytes: entry.size_bytes,
+            source: "TC",
         })
         .collect();
     Ok(results)
