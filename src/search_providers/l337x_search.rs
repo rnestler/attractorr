@@ -44,7 +44,8 @@ fn parse_l337x(mut results: Vec<TorrentSearchResult>) -> Vec<Torrent> {
                 .leeches
                 .map_err(|e| warn!("Getting leechers failed: {}", e))
                 .ok(),
-            ..Default::default()
+            size_bytes: None,
+            source: "L337X",
         });
     }
 
