@@ -1,5 +1,5 @@
-use crate::torrent::Torrent;
 use crate::SearchProvider;
+use crate::torrent::Torrent;
 
 use async_trait::async_trait;
 

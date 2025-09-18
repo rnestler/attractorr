@@ -2,8 +2,8 @@
 name = "attractorr"
 version = "0.6.3"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
-edition = "2021"
-rust-version = "1.74"
+edition = "2024"
+rust-version = "1.85"
 description = "A CLI tool to scrape the web for magnet links"
 repository = "https://github.com/rnestler/attractorr/"
 license = "MIT OR Apache-2.0"

@@ -14,6 +14,8 @@ use serde::Deserialize;
 
 use std::error::Error;
 
+// Not all fields are actually used, but we add all that are returned by the API.
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 pub struct Entry {
     pub id: String,

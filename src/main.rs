@@ -3,7 +3,7 @@ use search_providers::l337x_search::L337xSearch;
 use search_providers::pirate_bay_search::PirateBaySearch;
 use search_providers::torrent_csv_search::TorrentCsvSearch;
 use search_providers::yts_search::YtsSearch;
-use search_providers::{search_providers_from_ids, SearchProvider, SearchProviderId};
+use search_providers::{SearchProvider, SearchProviderId, search_providers_from_ids};
 
 mod torrent;
 use torrent::Torrent;
@@ -12,7 +12,7 @@ use clap::Parser;
 use futures_util::future::join_all;
 use is_terminal::IsTerminal;
 use log::{debug, error};
-use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
+use percent_encoding::{NON_ALPHANUMERIC, utf8_percent_encode};
 use termcolor::ColorChoice;
 
 #[derive(clap::ValueEnum, Clone, Copy, Debug)]
