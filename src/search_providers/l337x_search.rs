@@ -1,10 +1,10 @@
-use crate::torrent::Torrent;
 use crate::SearchProvider;
+use crate::torrent::Torrent;
 
 use async_trait::async_trait;
 use log::{info, warn};
 use std::error::Error;
-use torrent_search::{search_l337x, TorrentSearchResult};
+use torrent_search::{TorrentSearchResult, search_l337x};
 
 //The struct field is needed for compatibility
 pub struct L337xSearch {}
