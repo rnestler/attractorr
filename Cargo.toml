@@ -1,6 +1,6 @@
 [package]
 name = "attractorr"
-version = "0.6.3"
+version = "0.7.0"
 authors = ["Raphael Nestler <raphael.nestler@gmail.com>"]
 edition = "2024"
 rust-version = "1.85"
