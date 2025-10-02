@@ -6,10 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2025-10-02
+
 ### Changed
 
  * Bump MSRV to 1.85
  * Use Rust 2024 edition
+ * Update dependencies
+
+### Added
+
+ * Show source of torrent in output
 
 ## [0.6.3] - 2024-11-02
 
