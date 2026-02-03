@@ -16,7 +16,7 @@ lto = "fat"
 
 [dependencies]
 bytesize = "2.3.1"
-bytes = "1.11.0"
+bytes = "1.11.1"
 hyper = { version = "1.8.1", features = ["full"] }
 hyper-util = { version = "0.1.19", features = ["full"] }
 http-body-util = "0.1.3"
