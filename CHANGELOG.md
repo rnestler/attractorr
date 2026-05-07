@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2006-07-07
+
+### Changed
+
+ * Update dependencies
+
 ## [0.7.0] - 2025-10-03
 
 ### Changed
@@ -152,7 +158,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * Initial release
 
 
-[Unreleased]: https://github.com/rnestler/attractorr/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/rnestler/attractorr/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/rnestler/attractorr/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/rnestler/attractorr/compare/v0.6.3...v0.7.0
 [0.6.3]: https://github.com/rnestler/attractorr/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/rnestler/attractorr/compare/v0.6.1...v0.6.2
