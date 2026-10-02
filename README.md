@@ -57,14 +57,14 @@ paru -S attractorr
 Just execute
 
 ```
-$ cargo run "search term"
+$ attractorr "search term"
 ```
 
 To search for "search term" in all supported sources.
 
 With `--search-providers` one may limit the sources:
 ```
-$ cargo run -- --sort seeders --search-providers yts,pirate-bay,torrent-csv test
+$ attractorr --sort seeders --search-providers yts,pirate-bay,torrent-csv test
 ```
 
 ## Alternatives
