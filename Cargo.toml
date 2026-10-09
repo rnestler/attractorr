@@ -33,4 +33,4 @@ tokio = { version = "1.52.3", features = ["macros", "rt-multi-thread"] }
 percent-encoding = "^2.3.2"
 futures-util = "0.3.32"
 torrent_search = "0.3"
-yts-api = "0.4"
+yts-api = "0.5"
