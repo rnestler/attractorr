@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+ * Fix YTS search
+
 ## [0.7.1] - 2006-07-07
 
 ### Changed
